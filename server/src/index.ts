@@ -14,6 +14,7 @@ Colors.colors("", "");
 const port = process.env.PORT! || 9090;
 const mongo_uri: string = process.env.MONGODB_URI!;
 const backend_origin: string = process.env.BACKEND_ORIGIN!;
+const node_env: string = process.env.NODE_ENV!;
 
 // middleware
 const middleware = [
@@ -31,6 +32,8 @@ app.use([notFound, errorHandler]);
 
 // listen
 app.listen(port, async (): Promise<void> => {
-   console.log(`Server is running on ${backend_origin}`);
-   await dbConnection(mongo_uri);
+   console.log(
+      `Server is running on ${backend_origin}`.bg_black.cyan.underline.bold
+   );
+   await dbConnection(mongo_uri, node_env);
 });
