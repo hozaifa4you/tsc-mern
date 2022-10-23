@@ -1,0 +1,47 @@
+{
+   "name": "tsc-mern-server",
+   "version": "1.0.0",
+   "description": "This is a tutorial based mern stack application with Nathan O'Donnell",
+   "main": "index.js",
+   "scripts": {
+      "start:pro": "node dist/index.ts",
+      "start:dev": "nodemon src/index.ts",
+      "build": "tsc -p ."
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/yousuf4you/tsc-mern.git"
+   },
+   "keywords": [
+      "mern",
+      "typescript",
+      "tsx",
+      "reactjs",
+      "nodejs",
+      "mongodb",
+      "express"
+   ],
+   "author": "yousuf4you <yousuf360.ya@gmail.com>",
+   "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/yousuf4you/tsc-mern/issues"
+   },
+   "homepage": "https://github.com/yousuf4you/tsc-mern#readme",
+   "dependencies": {
+      "colors.ts": "^1.0.20",
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "express-async-handler": "^1.2.0",
+      "mongoose": "^6.6.7",
+      "morgan": "^1.10.0"
+   },
+   "devDependencies": {
+      "@types/colors": "^1.2.1",
+      "@types/express": "^4.17.14",
+      "@types/morgan": "^1.9.3",
+      "@types/node": "^18.11.3",
+      "nodemon": "^2.0.20",
+      "ts-node": "^10.9.1",
+      "typescript": "^4.8.4"
+   }
+}
