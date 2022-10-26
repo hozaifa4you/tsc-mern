@@ -1,49 +1,85 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+
+import Project from "../models/Project";
 
 class ProjectsControllers {
    /**
     * @desc Get all projects
     * @method GET
     */
-   async getAllProjects(req: Request, res: Response, next: NextFunction) {
-      try {
-      } catch (err) {}
+   async getAllProjects(req: Request, res: Response): Promise<any> {
+      const projects = await Project.find({});
+      return res.status(200).json(projects);
    }
 
    /**
     * @desc create a project
     * @method POST
     */
-   async createANewProject(req: Request, res: Response, next: NextFunction) {
-      try {
-      } catch (err: any) {}
+   async createANewProject(req: Request, res: Response): Promise<any> {
+      if (!req.body.title) {
+         res.status(400);
+         throw new Error("Title is required!");
+      }
+
+      await Project.create(req.body);
+
+      res.status(201).json({ success: true, message: "new project created!" });
    }
 
    /**
     * @desc get a project by id
     * @method GET
     */
-   async getAProjectById(req: Request, res: Response, next: NextFunction) {
-      try {
-      } catch (err: any) {}
+   async getAProjectById(req: Request, res: Response): Promise<any> {
+      const project = await Project.findById(req.params.id);
+
+      if (!project) {
+         res.status(404);
+         throw new Error("Project not found!");
+      }
+
+      res.status(200).json({ success: true, project: project });
    }
 
    /**
     * @desc update a project by id
     * @method PUT
     */
-   async updateProjectById(req: Request, res: Response, next: NextFunction) {
-      try {
-      } catch (err: any) {}
+   async updateProjectById(req: Request, res: Response) {
+      if (!req.body.title) {
+         res.status(400);
+         throw new Error("Title is required!");
+      }
+
+      const project = await Project.findById(req.params.id);
+      if (!project) {
+         res.status(404);
+         throw new Error("Project not found!");
+      }
+
+      const pro = await Project.findByIdAndUpdate(req.params.id, req.body, {
+         new: true,
+      });
+
+      res.status(200).json({ success: true, project: pro });
    }
 
    /**
     * @desc delete a project by id
     * @method DELETE
     */
-   async deleteProjectsById(req: Request, res: Response, next: NextFunction) {
-      try {
-      } catch (err: any) {}
+   async deleteProjectsById(req: Request, res: Response) {
+      const project = await Project.findById(req.params.id);
+
+      if (!project) {
+         res.status(404);
+         throw new Error("Project not found!");
+      }
+
+      await Project.findByIdAndDelete(req.params.id);
+
+      res.status(200).json({ success: true, message: "Project was deleted" });
    }
 }
 

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import asyncHandler from "express-async-handler";
 
 import projectsCtrls from "../controllers/projects-ctrls";
 
@@ -10,22 +11,17 @@ const router: Router = Router();
  */
 router
    .route("/")
-   .get(projectsCtrls.getAllProjects)
-   .post(projectsCtrls.createANewProject);
+   .get(asyncHandler(projectsCtrls.getAllProjects))
+   .post(asyncHandler(projectsCtrls.createANewProject));
 
 /**
- * @desc get a project by id & update a project by id
- * @method GET & PUT
+ * @desc get a project by id & update a project by id & delete a project by id
+ * @method GET & PUT & DELETE
  */
 router
    .route("/:id")
-   .get(projectsCtrls.getAProjectById)
-   .put(projectsCtrls.updateProjectById);
-
-/**
- * @desc delete a project by id
- * @method DELETE
- */
-router.route("/:id").delete(projectsCtrls.deleteProjectsById);
+   .get(asyncHandler(projectsCtrls.getAProjectById))
+   .put(asyncHandler(projectsCtrls.updateProjectById))
+   .delete(asyncHandler(projectsCtrls.deleteProjectsById));
 
 export default router;

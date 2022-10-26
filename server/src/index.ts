@@ -6,8 +6,9 @@ import * as Colors from "colors.ts";
 import { dbConnection } from "./utils/dbConnection";
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 import projectRoutes from "./routes/project-routes";
+import userRoutes from "./routes/user-routes";
 
-// config
+// HACK config
 const app: Application = express();
 dotenv.config();
 Colors.colors("", "");
@@ -16,7 +17,7 @@ const mongo_uri: string = process.env.MONGODB_URI!;
 const backend_origin: string = process.env.BACKEND_ORIGIN!;
 const node_env: string = process.env.NODE_ENV!;
 
-// middleware
+// HACK middleware
 const middleware = [
    morgan("dev"),
    express.json({ limit: "30mb" }),
@@ -24,13 +25,14 @@ const middleware = [
 ];
 app.use(middleware);
 
-// endpoints
+// HACK endpoints
 app.use("/api/v1/projects", projectRoutes);
+app.use("/api/v1/users", userRoutes);
 
-// error handler
+// HACK error handler
 app.use([notFound, errorHandler]);
 
-// listen
+// HACK listen
 app.listen(port, async (): Promise<void> => {
    console.log(
       `Server is running on ${backend_origin}`.bg_black.cyan.underline.bold

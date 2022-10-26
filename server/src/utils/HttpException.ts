@@ -3,6 +3,8 @@ export class HttpException extends Error {
    message: string;
    error: string | null;
    code?: number;
+   keyValue?: object;
+   errors?: object;
 
    constructor(message: string, status: number, error: string | null) {
       super(message);
@@ -11,5 +13,7 @@ export class HttpException extends Error {
       this.message = message;
       this.error = error || null;
       this.code = this.code;
+      this.keyValue = this.keyValue;
+      this.errors = this.errors;
    }
 }
