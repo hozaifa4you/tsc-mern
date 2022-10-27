@@ -8,14 +8,14 @@ export interface ISetRequestType extends Request {
 }
 
 /**
- *
+ * @description User check the user present or not!
  * @param req Request from Express
  * @param res Response from Express
  * @param next NextFunction from Express
  * @requires Promise -> void
  */
 export const authentication = async (
-   req: ISetRequestType,
+   req: Request,
    res: Response,
    next: NextFunction
 ): Promise<void> => {
@@ -37,4 +37,20 @@ export const authentication = async (
 
    req.user = decoded;
    next();
+};
+
+export const authenticationMe = async (
+   req: Request,
+   res: Response,
+   next: NextFunction
+) => {
+   const user: IJwtPayload | undefined = req.user;
+
+   if (!user) {
+      res.status(401);
+      throw new Error("Please login first! 🥵👎");
+   }
+
+   if (user && (user.isAdmin === true || user)) {
+   }
 };

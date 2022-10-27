@@ -2,6 +2,7 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
 import userCtrls from "../controllers/user-ctrls";
+import { authentication } from "../middleware/authentications";
 
 const router: Router = Router();
 
@@ -30,7 +31,7 @@ router.route("/all-users").get(asyncHandler(userCtrls.getUsers));
  */
 router
    .route("/:id")
-   .get(asyncHandler(userCtrls.getUserById))
-   .put(asyncHandler(userCtrls.updateUser))
-   .delete(asyncHandler(userCtrls.deleteUser));
+   .get(asyncHandler(userCtrls.getUserById)) // TODO get user by id
+   .put(asyncHandler(authentication), asyncHandler(userCtrls.updateUser)) // TODO update user by id
+   .delete(asyncHandler(authentication), asyncHandler(userCtrls.deleteUser)); // TODO delete user by id
 export default router;
