@@ -8,29 +8,31 @@ class ProjectsControllers {
     * @desc Get all projects
     * @method GET
     */
-   async getAllProjects(req: Request, res: Response): Promise<void> {
+   async getAllProjects(req: Request, res: Response): Promise<Response> {
       const projects = await Project.find({});
-      res.status(200).json(projects);
+      return res.status(200).json(projects);
    }
 
    /**
     * @desc create a project
     * @method POST
     */
-   async createANewProject(req: Request, res: Response): Promise<any> {
+   async createANewProject(req: Request, res: Response): Promise<Response> {
       if (!req.body.title) {
          res.status(400);
          throw new Error("Title is required!");
       }
       await Project.create(req.body);
-      res.status(201).json({ success: true, message: "new project created!" });
+      return res
+         .status(201)
+         .json({ success: true, message: "new project created!" });
    }
 
    /**
     * @desc get a project by id
     * @method GET
     */
-   async getAProjectById(req: Request, res: Response): Promise<any> {
+   async getAProjectById(req: Request, res: Response): Promise<Response> {
       const project = await Project.findById(req.params.id);
 
       if (!project) {
@@ -38,14 +40,14 @@ class ProjectsControllers {
          throw new Error("Project not found!");
       }
 
-      res.status(200).json({ success: true, project: project });
+      return res.status(200).json({ success: true, project: project });
    }
 
    /**
     * @desc update a project by id
     * @method PUT
     */
-   async updateProjectById(req: Request, res: Response): Promise<any> {
+   async updateProjectById(req: Request, res: Response): Promise<Response> {
       if (!req.body.title) {
          res.status(400);
          throw new Error("Title is required!");
@@ -61,14 +63,14 @@ class ProjectsControllers {
          new: true,
       });
 
-      res.status(200).json({ success: true, project: pro });
+      return res.status(200).json({ success: true, project: pro });
    }
 
    /**
     * @desc delete a project by id
     * @method DELETE
     */
-   async deleteProjectsById(req: Request, res: Response) {
+   async deleteProjectsById(req: Request, res: Response): Promise<Response> {
       const project = await Project.findById(req.params.id);
 
       if (!project) {
@@ -78,7 +80,9 @@ class ProjectsControllers {
 
       await Project.findByIdAndDelete(req.params.id);
 
-      res.status(200).json({ success: true, message: "Project was deleted" });
+      return res
+         .status(200)
+         .json({ success: true, message: "Project was deleted" });
    }
 }
 
