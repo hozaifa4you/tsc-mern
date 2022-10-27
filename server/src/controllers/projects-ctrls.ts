@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 
 import Project from "../models/Project";
@@ -7,9 +8,9 @@ class ProjectsControllers {
     * @desc Get all projects
     * @method GET
     */
-   async getAllProjects(req: Request, res: Response): Promise<any> {
+   async getAllProjects(req: Request, res: Response): Promise<void> {
       const projects = await Project.find({});
-      return res.status(200).json(projects);
+      res.status(200).json(projects);
    }
 
    /**
@@ -21,9 +22,7 @@ class ProjectsControllers {
          res.status(400);
          throw new Error("Title is required!");
       }
-
       await Project.create(req.body);
-
       res.status(201).json({ success: true, message: "new project created!" });
    }
 
@@ -46,7 +45,7 @@ class ProjectsControllers {
     * @desc update a project by id
     * @method PUT
     */
-   async updateProjectById(req: Request, res: Response) {
+   async updateProjectById(req: Request, res: Response): Promise<any> {
       if (!req.body.title) {
          res.status(400);
          throw new Error("Title is required!");

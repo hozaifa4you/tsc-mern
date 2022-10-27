@@ -26,7 +26,7 @@ export const errorHandler = (
    let errors: object[] = [];
 
    // FIXME remove in future
-   console.log(`Error showing`.red.underline, err);
+   console.log("Error showing".red.underline, err);
    // console.log(`Error showing name`.yellow.bold, err.name);
    // console.log(`Error showing errors keys`.red.bold, Object.keys(err.errors!));
    // console.log(

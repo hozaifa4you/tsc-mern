@@ -38,19 +38,3 @@ export const authentication = async (
    req.user = decoded;
    next();
 };
-
-export const authenticationMe = async (
-   req: Request,
-   res: Response,
-   next: NextFunction
-) => {
-   const user: IJwtPayload | undefined = req.user;
-
-   if (!user) {
-      res.status(401);
-      throw new Error("Please login first! 🥵👎");
-   }
-
-   if (user && (user.isAdmin === true || user)) {
-   }
-};

@@ -2,7 +2,10 @@ import { connect, connection } from "mongoose";
 
 import { NODE_ENV } from "./options";
 
-export const dbConnection = async (db_uri: string, node_env: string) => {
+export const dbConnection = async (
+   db_uri: string,
+   node_env: string
+): Promise<void> => {
    try {
       await connect(db_uri);
       console.log(

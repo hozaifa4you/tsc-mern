@@ -2,6 +2,7 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
 import projectsCtrls from "../controllers/projects-ctrls";
+import { authentication } from "../middleware/authentications";
 
 const router: Router = Router();
 
@@ -12,7 +13,10 @@ const router: Router = Router();
 router
    .route("/")
    .get(asyncHandler(projectsCtrls.getAllProjects))
-   .post(asyncHandler(projectsCtrls.createANewProject));
+   .post(
+      asyncHandler(authentication),
+      asyncHandler(projectsCtrls.createANewProject)
+   );
 
 /**
  * @desc get a project by id & update a project by id & delete a project by id
@@ -21,7 +25,13 @@ router
 router
    .route("/:id")
    .get(asyncHandler(projectsCtrls.getAProjectById))
-   .put(asyncHandler(projectsCtrls.updateProjectById))
-   .delete(asyncHandler(projectsCtrls.deleteProjectsById));
+   .put(
+      asyncHandler(authentication),
+      asyncHandler(projectsCtrls.updateProjectById)
+   )
+   .delete(
+      asyncHandler(authentication),
+      asyncHandler(projectsCtrls.deleteProjectsById)
+   );
 
 export default router;
