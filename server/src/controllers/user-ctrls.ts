@@ -2,12 +2,17 @@ import { Request, Response } from "express";
 import lodash from "lodash";
 
 import User from "../models/User";
+import { jwtTokenGenerator, matchedPassword } from "../utils/loginOptions";
 
 export interface IBodyType {
    name: string;
    username: string;
    password: string;
    email: string;
+}
+export interface ILoginBody {
+   username: string;
+   password: string;
 }
 
 class UserControllers {
@@ -17,7 +22,49 @@ class UserControllers {
     * @method POST
     * @route /api/v1/users/login
     */
-   async login(req: Request, res: Response): Promise<void> {}
+   async login(req: Request, res: Response): Promise<void> {
+      const { username, password } = <ILoginBody>req.body;
+
+      if (!username || !password) {
+         res.status(500);
+         throw new Error(
+            "data not provided! please 🙏 provide user data! ☹️💕"
+         );
+      }
+
+      const user = await User.findOne({
+         $or: [{ username }, { email: username }],
+      });
+
+      if (!user) {
+         res.status(404);
+         throw new Error("Invalid credentials, try again! ☹️🥵");
+      }
+
+      const match = await matchedPassword(password, user.password);
+      if (!match) {
+         res.status(401);
+         throw new Error("Invalid credentials, try again! ☹️🥵");
+      }
+
+      const token = jwtTokenGenerator({
+         id: user._id,
+         username: user.username,
+         email: user.email,
+         isAdmin: user.isAdmin,
+      });
+
+      res.status(200).json({
+         success: true,
+         user: lodash.omit(user.toJSON(), [
+            "password",
+            "__v",
+            "createdAt",
+            "updatedAt",
+         ]),
+         token,
+      });
+   }
    // HACK create new user
    /**
     * @desc create new user

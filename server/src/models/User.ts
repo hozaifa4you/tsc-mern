@@ -1,6 +1,12 @@
-import { Schema, model, Document } from "mongoose";
+import {
+   Schema,
+   model,
+   Document,
+   CallbackWithoutResultAndOptionalError,
+} from "mongoose";
+import bcrypt from "bcryptjs";
 
-export interface UserType {
+export interface DocumentTypes extends Document {
    name: string;
    username: string;
    email: string;
@@ -10,17 +16,17 @@ export interface UserType {
    resetPasswordExpire: Date;
 }
 
-export interface IUserSchema extends UserType {
-   _id: Schema.Types.ObjectId;
-   createdAt?: Date;
-   updatedAt?: Date;
-   __v?: number;
-}
+// interface IUserSchema {
+//    _id: Schema.Types.ObjectId;
+//    createdAt?: Date;
+//    updatedAt?: Date;
+//    __v?: number;
+// }
 
 const emailRegx: RegExp =
    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // XXX regex validation for email
 
-const userSchema = new Schema<UserType>(
+const userSchema = new Schema<DocumentTypes>(
    {
       name: {
          type: String,
@@ -56,6 +62,19 @@ const userSchema = new Schema<UserType>(
    { timestamps: true }
 );
 
-const userModel = model<IUserSchema>("User", userSchema);
+userSchema.pre(
+   "save",
+   async function (next: CallbackWithoutResultAndOptionalError): Promise<void> {
+      const user: DocumentTypes = this as DocumentTypes;
+      if (!user.isModified("password")) {
+         next();
+      }
+      const hash = await bcrypt.hash(user.password, 12);
+      user.password = hash;
+      return next();
+   }
+);
+
+const userModel = model<DocumentTypes>("User", userSchema);
 
 export default userModel;
