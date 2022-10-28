@@ -8,7 +8,7 @@ export const notFound = (
    req: Request,
    res: Response,
    next: NextFunction
-): void => {
+): Response | void => {
    const message: string =
       `The requested path was not found ` + req.originalUrl;
 
@@ -20,7 +20,7 @@ export const errorHandler = (
    req: Request,
    res: Response,
    next: NextFunction
-): void => {
+): Response => {
    let status: number = err.status || 500;
    let message: string = err.message || "Internal server error!";
    let errors: object[] = [];
@@ -56,7 +56,7 @@ export const errorHandler = (
       status = 406;
    }
 
-   res.status(status).json({
+   return res.status(status).json({
       success: false,
       stack: process.env.NODE_ENV === NODE_ENV.DEV ? err.stack : null,
       message,

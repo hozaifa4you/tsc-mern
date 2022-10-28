@@ -18,7 +18,7 @@ export const authentication = async (
    req: Request,
    res: Response,
    next: NextFunction
-): Promise<void> => {
+): Promise<Response | any> => {
    const headers: string | undefined = req.headers.authorization;
 
    if (!req.headers || !headers || !headers.startsWith("Bearer ")) {
@@ -36,5 +36,5 @@ export const authentication = async (
    }
 
    req.user = decoded;
-   next();
+   return next();
 };
