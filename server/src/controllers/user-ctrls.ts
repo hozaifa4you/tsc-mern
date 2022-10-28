@@ -22,7 +22,7 @@ class UserControllers {
     * @method POST
     * @route /api/v1/users/login
     */
-   async login(req: Request, res: Response): Promise<Response> {
+   async login(req: Request, res: Response): Promise<void> {
       const { username, password } = <ILoginBody>req.body;
 
       if (!username || !password) {
@@ -54,7 +54,7 @@ class UserControllers {
          userType: user.userType,
       });
 
-      return res.status(200).json({
+      res.status(200).json({
          success: true,
          user: lodash.omit(user.toJSON(), [
             "password",
@@ -71,7 +71,7 @@ class UserControllers {
     * @method POST
     * @route /api/v1/users/
     */
-   async createUser(req: Request, res: Response): Promise<Response> {
+   async createUser(req: Request, res: Response): Promise<void> {
       const body = <IBodyType>req.body;
 
       const user = await User.create(body);
@@ -81,7 +81,7 @@ class UserControllers {
          throw new Error("user creation unsuccessful! 😔💔");
       }
 
-      return res.status(201).json({
+      res.status(201).json({
          success: true,
          user: lodash.omit(user.toJSON(), ["password", "__v"]),
       });
@@ -92,7 +92,7 @@ class UserControllers {
     * @method GET
     * @route /api/v1/users/:id
     */
-   async getUserById(req: Request, res: Response): Promise<Response> {
+   async getUserById(req: Request, res: Response): Promise<void> {
       const user = await User.findById(req.params.id);
 
       if (!user) {
@@ -100,7 +100,7 @@ class UserControllers {
          throw new Error("User not found! 😒💔");
       }
 
-      return res.status(200).json({
+      res.status(200).json({
          success: true,
          user: lodash.omit(user.toJSON(), ["password", "__v"]),
       });
@@ -111,7 +111,7 @@ class UserControllers {
     * @method PUT
     * @route /api/v1/users/
     */
-   async updateUser(req: Request, res: Response): Promise<Response> {
+   async updateUser(req: Request, res: Response): Promise<void> {
       const user = await User.findById(req.params.id);
 
       if (!user) {
@@ -128,7 +128,7 @@ class UserControllers {
          new: true,
       });
 
-      return res.status(200).json({
+      res.status(200).json({
          success: true,
          user: lodash.omit(updateUser?.toJSON(), ["password", "__v"]),
       });
@@ -139,7 +139,7 @@ class UserControllers {
     * @method DELETE
     * @route /api/v1/users/
     */
-   async deleteUser(req: Request, res: Response): Promise<Response> {
+   async deleteUser(req: Request, res: Response): Promise<void> {
       const user = await User.findById(req.params.id);
 
       if (!user) {
@@ -149,7 +149,7 @@ class UserControllers {
 
       await User.findByIdAndDelete(req.params.id);
 
-      return res.status(200).json({
+      res.status(200).json({
          success: true,
          message: "user deleted successful 🤪👋",
       });
@@ -160,7 +160,7 @@ class UserControllers {
     * @method GET
     * @route /api/v1/users/all-users
     */
-   async getUsers(req: Request, res: Response): Promise<Response> {
+   async getUsers(req: Request, res: Response): Promise<void> {
       const users = await User.find({});
 
       if (!users) {
@@ -168,7 +168,7 @@ class UserControllers {
          throw new Error("No user found!");
       }
 
-      return res.status(200).json({
+      res.status(200).json({
          success: true,
          users: users.map((user) =>
             lodash.omit(user.toJSON(), ["password", "__v"])
