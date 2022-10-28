@@ -51,7 +51,7 @@ class UserControllers {
          id: user._id,
          username: user.username,
          email: user.email,
-         isAdmin: user.isAdmin,
+         userType: user.userType,
       });
 
       res.status(200).json({

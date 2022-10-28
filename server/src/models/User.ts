@@ -6,12 +6,24 @@ import {
 } from "mongoose";
 import bcrypt from "bcryptjs";
 
+export enum EUsers {
+   User = "user",
+   Admin = "admin",
+   Supervisor = "supervisor",
+   Instructor = "instructor",
+   Stuff = "stuff",
+   Manager = "manager",
+   CEO = "ceo",
+   Dev = "developer",
+}
+
 export interface DocumentTypes extends Document {
    name: string;
    username: string;
    email: string;
    password: string;
-   isAdmin: boolean;
+   userType: EUsers;
+   projects: Schema.Types.ObjectId[];
    resetPasswordToken: string;
    resetPasswordExpire: Date;
 }
@@ -55,7 +67,8 @@ const userSchema = new Schema<DocumentTypes>(
          min: [8, "password minimum at least 8 character! 😕😕"],
          max: [32, "password must not longer than 32 character! 😕😕"],
       },
-      isAdmin: { type: Boolean, required: true, default: false },
+      userType: { type: String, enum: EUsers, required: true },
+      projects: [Schema.Types.ObjectId],
       resetPasswordToken: String, // XXX it will help you to reset password
       resetPasswordExpire: Date, // XXX password expire of token
    },

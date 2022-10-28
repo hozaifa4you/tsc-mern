@@ -1,6 +1,8 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+import { EUsers } from "../models/User";
+
 const jwt_secret: string = process.env.JWT_SECRET!;
 const jwt_expiry: string = process.env.JWT_EXPIRY!;
 
@@ -8,7 +10,7 @@ export interface IJwtPayload extends JwtPayload {
    id: string;
    username: string;
    email: string;
-   isAdmin: boolean;
+   userType: EUsers;
 }
 
 /**
