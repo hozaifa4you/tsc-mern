@@ -49,7 +49,8 @@ export const createUserACPermission = (userType: EUsers): boolean => {
 
 export const userTypeChecker = (
    user: IJwtPayload,
-   setType: string
+   userType: string
 ): boolean => {
+   // ceo checker
    return true;
 };
