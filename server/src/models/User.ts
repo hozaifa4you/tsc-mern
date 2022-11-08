@@ -7,15 +7,15 @@ import {
 import bcrypt from "bcryptjs";
 
 export enum EUsers {
-   CEO = "ceo",
-   DepartmentHead = "department-head",
-   Admin = "admin",
-   User = "user",
-   Supervisor = "supervisor",
-   Instructor = "instructor",
-   Stuff = "stuff",
-   Manager = "manager",
-   Dev = "developer",
+   CEO = "ceo", // TODO can create new user {All user}
+   Manager = "manager", // TODO can create new user not ECO
+   DepartmentHead = "department-head", // TODO can create new user not above
+   Admin = "admin", // TODO can create new user {All not CEO and  above}
+   Dev = "developer", // TODO can create new user {but restricted}
+   Supervisor = "supervisor", // TODO can create only new user
+   Instructor = "instructor", // TODO can't create new user
+   Stuff = "stuff", // TODO can't create new user
+   User = "user", // TODO can't create new user
 }
 
 export interface DocumentTypes extends Document {
@@ -25,6 +25,7 @@ export interface DocumentTypes extends Document {
    phone: string;
    password: string;
    userType: EUsers;
+   referBy: Schema.Types.ObjectId | "default";
    projects: Schema.Types.ObjectId[];
    resetPasswordToken: string;
    resetPasswordExpire: Date;
@@ -65,11 +66,16 @@ const userSchema = new Schema<DocumentTypes>(
          type: String,
          required: [true, "Password is required! 🫥👎"],
          unique: true,
-         trim: true,
          min: [8, "password minimum at least 8 character! 🤪😕"],
          max: [32, "password must not longer than 32 character! 🦣😕"],
       },
-      userType: { type: String, enum: EUsers, required: true },
+      userType: {
+         type: String,
+         enum: EUsers,
+         required: true,
+         default: EUsers.User,
+      },
+      referBy: { type: Schema.Types.ObjectId, required: true },
       projects: [Schema.Types.ObjectId],
       resetPasswordToken: String, // XXX it will help you to reset password
       resetPasswordExpire: Date, // XXX password expire of token

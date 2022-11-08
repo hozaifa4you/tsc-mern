@@ -1,14 +1,29 @@
 import { Request, Response } from "express";
 import lodash from "lodash";
 
+import { EUsers } from "./../models/User";
 import User from "../models/User";
 import { jwtTokenGenerator, matchedPassword } from "../utils/loginOptions";
+import {
+   createAdminACPermission,
+   createCeoACPermission,
+   createDepartmentHeadACPermission,
+   createDevACPermission,
+   createInstructorACPermission,
+   createManagerACPermission,
+   createStuffACPermission,
+   createSupervisorACPermission,
+   createUserACPermission,
+   userTypeChecker,
+} from "../utils/utils";
 
 export interface IBodyType {
    name: string;
    username: string;
-   password: string;
    email: string;
+   phone: string;
+   password: string;
+   userType: EUsers;
 }
 export interface ILoginBody {
    username: string;
@@ -73,6 +88,14 @@ class UserControllers {
     */
    async createUser(req: Request, res: Response): Promise<void> {
       const body = <IBodyType>req.body;
+
+      // FIXME: user creation restriction
+      let permit: boolean;
+      if (req.user) {
+         permit = userTypeChecker(req.user, body.userType);
+      } else {
+         throw new Error("Please login! 😔💔");
+      }
 
       const user = await User.create(body);
 

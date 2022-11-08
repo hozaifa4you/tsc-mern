@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import User, { DocumentTypes } from "../models/User";
+import User, { DocumentTypes, EUsers } from "../models/User";
 import { jwtTokenVerify, IJwtPayload } from "../utils/loginOptions";
 
 export interface ISetRequestType extends Request {
@@ -37,4 +37,23 @@ export const authentication = async (
 
    req.user = decoded;
    return next();
+};
+
+// XXX Raw permission check
+export const createPermission = async (
+   req: Request,
+   res: Response,
+   next: NextFunction
+): Promise<void> => {
+   const user = req.user;
+   if (
+      user?.userType === EUsers.CEO ||
+      user?.userType === EUsers.Manager ||
+      user?.userType === EUsers.DepartmentHead ||
+      user?.userType === EUsers.Admin ||
+      user?.userType === EUsers.Dev ||
+      user?.userType === EUsers.Supervisor
+   )
+      return next();
+   else throw new Error("Your are not granted to doing the task!");
 };

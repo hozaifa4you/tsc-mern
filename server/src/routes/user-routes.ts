@@ -2,7 +2,10 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
 import userCtrls from "../controllers/user-ctrls";
-import { authentication } from "../middleware/authentications";
+import {
+   authentication,
+   createPermission,
+} from "../middleware/authentications";
 
 const router: Router = Router();
 
@@ -17,7 +20,13 @@ router.route("/login").post(asyncHandler(userCtrls.login));
  * @method {POST, PUT & DELETE}
  * @route /api/v1/users/
  */
-router.route("/").post(asyncHandler(userCtrls.createUser));
+router
+   .route("/")
+   .post(
+      asyncHandler(authentication),
+      asyncHandler(createPermission),
+      asyncHandler(userCtrls.createUser)
+   );
 /**
  * @desc get all users
  * @method GET
