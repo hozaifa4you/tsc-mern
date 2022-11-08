@@ -7,13 +7,14 @@ import {
 import bcrypt from "bcryptjs";
 
 export enum EUsers {
-   User = "user",
+   CEO = "ceo",
+   DepartmentHead = "department-head",
    Admin = "admin",
+   User = "user",
    Supervisor = "supervisor",
    Instructor = "instructor",
    Stuff = "stuff",
    Manager = "manager",
-   CEO = "ceo",
    Dev = "developer",
 }
 
@@ -21,6 +22,7 @@ export interface DocumentTypes extends Document {
    name: string;
    username: string;
    email: string;
+   phone: string;
    password: string;
    userType: EUsers;
    projects: Schema.Types.ObjectId[];
@@ -35,30 +37,37 @@ const userSchema = new Schema<DocumentTypes>(
    {
       name: {
          type: String,
-         required: [true, "name is required! 😡👎"],
+         required: [true, "name is required! 📛😡👎"],
          unique: false,
          trim: true,
       },
       username: {
          type: String,
-         required: [true, "username is required! 😡👎"],
+         required: [true, "username is required! 👤😡👎"],
          unique: true,
          trim: true,
       },
       email: {
          type: String,
-         required: [true, "Email is required! 😡👎"],
+         required: [true, "Email is required! 📧😡👎"],
          unique: true,
          trim: true,
-         match: [emailRegx, "please add a valid email! 😒👎"],
+         match: [emailRegx, "please add a valid email! 🚻😒👎"],
+      },
+      phone: {
+         type: String,
+         required: [true, "phone number is required! ☎️😡👎"],
+         unique: true,
+         trim: true,
+         match: [emailRegx, "please add a valid email! 🙃😒👎"],
       },
       password: {
          type: String,
-         required: [true, "Password is required! 😡👎"],
+         required: [true, "Password is required! 🫥👎"],
          unique: true,
          trim: true,
-         min: [8, "password minimum at least 8 character! 😕😕"],
-         max: [32, "password must not longer than 32 character! 😕😕"],
+         min: [8, "password minimum at least 8 character! 🤪😕"],
+         max: [32, "password must not longer than 32 character! 🦣😕"],
       },
       userType: { type: String, enum: EUsers, required: true },
       projects: [Schema.Types.ObjectId],

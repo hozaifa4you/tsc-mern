@@ -20,11 +20,11 @@ export enum ECategories {
    BackendApp = "backend-app",
    NodeJs = "node-js",
    ReactJs = "react-js",
-   Other = "other",
+   Others = "others",
 }
 
 export enum EStatus {
-   Coming = "coming",
+   UpComing = "UpComing",
    Progressing = "progressing",
    End = "end",
    Cancel = "cancel",
@@ -34,9 +34,9 @@ export enum EStatus {
 export interface IDocument extends Document {
    title: string;
    creator: Schema.Types.ObjectId;
+   projectManager: Schema.Types.ObjectId;
    desc: string;
    photos: string[];
-   head: Schema.Types.ObjectId;
    instructors: Schema.Types.ObjectId[];
    joined: Schema.Types.ObjectId[];
    status: IProjectStatus;
@@ -48,13 +48,13 @@ export interface IDocument extends Document {
 const projectSchema = new Schema<IDocument>(
    {
       creator: { type: Schema.Types.ObjectId, required: true },
+      projectManager: { type: Schema.Types.ObjectId, required: true },
       title: { type: String, required: true, unique: true },
       desc: { type: String, required: true, trim: true },
       category: { type: String, enum: ECategories, required: true },
       photos: { type: [String], trim: true, default: ["project.png"] },
-      head: { type: Schema.Types.ObjectId, required: true },
       instructors: { type: [Schema.Types.ObjectId] },
-      joined: { type: [Schema.Types.ObjectId] },
+      joined: [Schema.Types.ObjectId],
       status: {
          start: Date,
          end: Date,
