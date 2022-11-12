@@ -2,6 +2,7 @@ import express, { Application, Express, Request } from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import * as Colors from "colors.ts";
+import cors from "cors";
 
 import { IJwtPayload } from "./utils/loginOptions";
 import { dbConnection } from "./utils/dbConnection";
@@ -16,6 +17,7 @@ Colors.colors("", "");
 const port = process.env.PORT! || 9090;
 const mongo_uri: string = process.env.MONGODB_URI!;
 const backend_origin: string = process.env.BACKEND_ORIGIN!;
+const frontend_origin: string = process.env.FRONTEND_ORIGIN!;
 const node_env: string = process.env.NODE_ENV!;
 
 // TODO bind user with Express request
@@ -30,6 +32,7 @@ declare global {
 // HACK middleware
 const middleware = [
    morgan("dev"),
+   cors({ origin: frontend_origin }),
    express.json({ limit: "30mb" }),
    express.urlencoded({ limit: "10mb", extended: false }),
 ];

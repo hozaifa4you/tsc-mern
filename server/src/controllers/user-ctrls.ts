@@ -48,7 +48,7 @@ class UserControllers {
       }
 
       const user = await User.findOne({
-         $or: [{ username }, { email: username }],
+         $or: [{ username }, { email: username }, { phone: username }],
       });
 
       if (!user) {
