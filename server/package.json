@@ -1,5 +1,5 @@
 {
-   "name": "tsc-mern-server",
+   "name": "project-manager-server",
    "version": "1.0.0",
    "description": "This is a tutorial based mern stack application with Nathan O'Donnell",
    "main": "index.js",
