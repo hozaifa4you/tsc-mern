@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, Dispatch } from "@reduxjs/toolkit";
 
 import { RootState } from "../../redux/store";
 import { STATUS } from "../STATUS";
@@ -25,6 +25,7 @@ export interface IUser {
    name: string;
    phone: string;
    userType: string;
+   avatar?: string; // FIXME this is required props, fix in future
    username: string;
    projects?: object[];
 }
@@ -74,7 +75,7 @@ export const authSlice = createSlice({
    },
 });
 
-export const login = (loginData: ILoginData) => async (dispatch: Function) => {
+export const login = (loginData: ILoginData) => async (dispatch: Dispatch) => {
    dispatch(setStatus(STATUS.LOADING));
 
    try {
@@ -96,7 +97,7 @@ export const login = (loginData: ILoginData) => async (dispatch: Function) => {
    }
 };
 
-export const logout = () => async (dispatch: Function) => {
+export const logout = () => async (dispatch: Dispatch) => {
    dispatch(setStatus(STATUS.LOADING));
    dispatch(setLogout());
    localStorage.removeItem(login_info);

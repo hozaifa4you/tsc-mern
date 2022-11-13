@@ -23,6 +23,7 @@ export interface DocumentTypes extends Document {
    username: string;
    email: string;
    phone: string;
+   avatar: string;
    password: string;
    userType: EUsers;
    referBy: Schema.Types.ObjectId | "default";
@@ -61,6 +62,7 @@ const userSchema = new Schema<DocumentTypes>(
          unique: true,
          trim: true,
       },
+      avatar: { type: String, required: true, default: "avatar.png" },
       password: {
          type: String,
          required: [true, "Password is required! 🫥👎"],

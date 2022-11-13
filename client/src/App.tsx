@@ -3,8 +3,9 @@ import { load } from "webfontloader";
 import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
-import { Footer, Header, Protect, Guest } from "./components";
+import { Footer, Header, Guest } from "./components";
 import { Home, Login } from "./pages";
+import Test from "./pages/Test";
 
 const App = () => {
    useEffect(() => {
@@ -28,6 +29,7 @@ const App = () => {
                   </Guest>
                }
             />
+            <Route path="/test" element={<Test />} />
          </Routes>
          <Footer />
       </>
