@@ -34,8 +34,6 @@ const Navbar = () => {
       setAnchorEl(null);
    };
 
-   console.log(user?.avatar === "avatar.png");
-
    return (
       <>
          <Box sx={{ flexGrow: 1 }}>
