@@ -2,10 +2,8 @@ import { useEffect } from "react";
 import { load } from "webfontloader";
 import { Routes, Route } from "react-router-dom";
 
-// import logo from "./logo.svg";
-// import { Counter } from "./features/counter/Counter";
 import "./App.css";
-import { Footer, Header } from "./components";
+import { Footer, Header, Protect, Guest } from "./components";
 import { Home, Login } from "./pages";
 
 const App = () => {
@@ -22,7 +20,14 @@ const App = () => {
          <Header />
          <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+               path="/login"
+               element={
+                  <Guest>
+                     <Login />
+                  </Guest>
+               }
+            />
          </Routes>
          <Footer />
       </>

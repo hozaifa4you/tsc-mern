@@ -20,13 +20,11 @@ router.route("/login").post(asyncHandler(userCtrls.login));
  * @method {POST, PUT & DELETE}
  * @route /api/v1/users/
  */
-router
-   .route("/")
-   .post(
-      asyncHandler(authentication),
-      asyncHandler(createPermission),
-      asyncHandler(userCtrls.createUser)
-   );
+router.route("/").post(
+   // asyncHandler(authentication),
+   // asyncHandler(createPermission),
+   asyncHandler(userCtrls.createUser)
+);
 /**
  * @desc get all users
  * @method GET

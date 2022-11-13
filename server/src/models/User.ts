@@ -60,7 +60,6 @@ const userSchema = new Schema<DocumentTypes>(
          required: [true, "phone number is required! ☎️😡👎"],
          unique: true,
          trim: true,
-         match: [emailRegx, "please add a valid email! 🙃😒👎"],
       },
       password: {
          type: String,
@@ -75,7 +74,11 @@ const userSchema = new Schema<DocumentTypes>(
          required: true,
          default: EUsers.User,
       },
-      referBy: { type: Schema.Types.ObjectId, required: true },
+      // referBy: {
+      //    type: Schema.Types.ObjectId,
+      //    required: true,
+      //    default: "default",
+      // },
       projects: [Schema.Types.ObjectId],
       resetPasswordToken: String, // XXX it will help you to reset password
       resetPasswordExpire: Date, // XXX password expire of token

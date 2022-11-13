@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 
 import { Svg } from "../components";
-import { API } from "../app/API";
-import { LoginResponse } from "../app/responseTypes";
+import { useAppDispatch } from "../app/hooks";
+import { login } from "../redux/reducer/authenticationSlice";
 
 const LoginContainer = styled(Grid)(({ theme }) => ({
    background: "#fff",
@@ -36,11 +36,11 @@ const Login = () => {
    const [usernameError, setUsernameError] = useState<string>("");
    const [passError, setPassError] = useState<string>("");
    const navigate: NavigateFunction = useNavigate();
+   const dispatch = useAppDispatch();
 
    // TODO submit handler
-   const submitHandler = async (event: SyntheticEvent): Promise<void> => {
+   const submitHandler = (event: SyntheticEvent): void => {
       event.preventDefault();
-      console.log({ username, password });
       if (!username) {
          setUsernameError("username is required");
       }
@@ -52,13 +52,7 @@ const Login = () => {
       }
 
       const postData = { username, password };
-
-      try {
-         const { data } = await API.post("/api/v1/users/login", postData);
-         console.log(data);
-      } catch (err: any) {
-         console.log(err.message);
-      }
+      dispatch(login(postData));
    };
 
    return (

@@ -90,12 +90,12 @@ class UserControllers {
       const body = <IBodyType>req.body;
 
       // FIXME: user creation restriction
-      let permit: boolean;
-      if (req.user) {
-         permit = userTypeChecker(req.user, body.userType);
-      } else {
-         throw new Error("Please login! 😔💔");
-      }
+      // let permit: boolean;
+      // if (req.user) {
+      //    permit = userTypeChecker(req.user, body.userType);
+      // } else {
+      //    throw new Error("Please login! 😔💔");
+      // }
 
       const user = await User.create(body);
 
