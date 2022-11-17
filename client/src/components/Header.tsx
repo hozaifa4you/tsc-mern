@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { CssVarsProvider } from "@mui/joy/styles";
+import { Toaster } from "react-hot-toast";
 
 import { NavbarMenu, AccountSettings, Logo } from "../components";
 import { useAppSelector } from "../app/hooks";
@@ -155,6 +156,7 @@ const Navbar = () => {
                   </Box>
                </Toolbar>
             </AppBar>
+            <Toaster position="top-right" reverseOrder />
          </Box>
       </>
    );

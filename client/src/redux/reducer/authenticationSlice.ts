@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction, Dispatch } from "@reduxjs/toolkit";
+import { toast } from "react-hot-toast";
 
 import { RootState } from "../../redux/store";
 import { STATUS } from "../STATUS";
 import { API } from "../../app/API";
+import {
+   toastErrorStyle,
+   toastInfoStyle,
+   toastWarningStyle,
+} from "../../utils/toastStyling";
 
 const login_info: string = "login-info";
 
@@ -86,14 +92,19 @@ export const login = (loginData: ILoginData) => async (dispatch: Dispatch) => {
       if (data.success) {
          dispatch(setLogin(data));
          localStorage.setItem(login_info, JSON.stringify(data));
+         toast.success("Login has been succeed 🤪💕", toastInfoStyle);
+         dispatch(setStatus(STATUS.IDLE));
       } else {
          throw new Error("Login Failed!");
       }
    } catch (err: any) {
       dispatch(setStatus(STATUS.ERROR));
-      err.response && err.response.data.message
-         ? dispatch(setError(err.response.data.message))
-         : dispatch(err.message);
+      let err_message =
+         err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message;
+      dispatch(setError(err_message));
+      toast.error(err_message, toastErrorStyle);
    }
 };
 
@@ -101,6 +112,7 @@ export const logout = () => async (dispatch: Dispatch) => {
    dispatch(setStatus(STATUS.LOADING));
    dispatch(setLogout());
    localStorage.removeItem(login_info);
+   toast.success("Logout has been succeed 😒🥵", toastWarningStyle);
    dispatch(setStatus(STATUS.IDLE));
 };
 

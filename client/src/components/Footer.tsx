@@ -25,11 +25,7 @@ import { SingleListItem, SocialNavigator, Logo } from "../components";
 
 const Footer = () => {
    const theme = useTheme();
-   const location: Location = useLocation();
-
-   const { pathname } = location;
-
-   console.log(pathname === "/login");
+   const { pathname }: Location = useLocation();
 
    return (
       <Box
