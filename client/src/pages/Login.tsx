@@ -59,7 +59,7 @@ const Login = () => {
       <Grid
          container
          component="main"
-         sx={{ height: "calc(100vh - 100px)" }}
+         sx={{ height: "calc(100vh - calc(71px + 125px))" }}
          justifyContent="center"
          alignItems="center"
          position="relative"

@@ -5,5 +5,9 @@ export { default as Svg } from "./Svg";
 export { default as AccountSettings } from "./AccountSettings";
 export { default as CustomAlert } from "./CustomAlert";
 
+export { default as SingleListItem } from "./_Partials/SingleListItem";
+export { default as SocialNavigator } from "./_Partials/SocialNavigator";
+export { default as Logo } from "./_Partials/Logo";
+
 export { default as Guest } from "./Authentication/Guest";
 export { default as Protect } from "./Authentication/Protect";

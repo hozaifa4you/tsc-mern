@@ -1,5 +1,5 @@
 import { useState, MouseEvent } from "react";
-import { AppBar, Box, Toolbar, IconButton, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, IconButton } from "@mui/material";
 import {
    IconButton as IconButtonJoy,
    Badge,
@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CssVarsProvider } from "@mui/joy/styles";
 
-import { NavbarMenu, AccountSettings } from "../components";
+import { NavbarMenu, AccountSettings, Logo } from "../components";
 import { useAppSelector } from "../app/hooks";
 import { selectLogin } from "../redux/reducer/authenticationSlice";
 
@@ -53,28 +53,8 @@ const Navbar = () => {
                   >
                      <MenuIcon />
                   </IconButton>
-                  <img
-                     src="logo.png"
-                     alt="logo"
-                     width={50}
-                     style={{ cursor: "pointer" }}
-                     onClick={() => navigate("/")}
-                  />
-                  <Typography
-                     variant="h6"
-                     noWrap
-                     component="div"
-                     color="primary"
-                     sx={{
-                        display: { cursor: "pointer" },
-                     }}
-                     fontFamily="Josefin Slab"
-                     fontWeight="bold"
-                     textTransform="uppercase"
-                     onClick={() => navigate("/")}
-                  >
-                     Dev Projects
-                  </Typography>
+                  {/* TODO logo */}
+                  <Logo />
 
                   <Box sx={{ flexGrow: 1 }} />
                   <Box sx={{ flexGrow: 1 }} />
