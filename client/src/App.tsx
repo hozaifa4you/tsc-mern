@@ -4,8 +4,9 @@ import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
 import { Footer, Header, Guest } from "./components";
-import { Home, Login } from "./pages";
+import { Home, Login, Contact, Peoples, Projects } from "./pages";
 import Test from "./pages/Test";
+import { MenuUrls } from "./utils/urls";
 
 const App = () => {
    useEffect(() => {
@@ -20,16 +21,19 @@ const App = () => {
       <>
          <Header />
          <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path={MenuUrls.Home} element={<Home />} />
             <Route
-               path="/login"
+               path={MenuUrls.Login}
                element={
                   <Guest>
                      <Login />
                   </Guest>
                }
             />
-            <Route path="/test" element={<Test />} />
+            <Route path={MenuUrls.Projects} element={<Projects />} />
+            <Route path={MenuUrls.Peoples} element={<Peoples />} />
+            <Route path={MenuUrls.Contact} element={<Contact />} />
+            <Route path={MenuUrls.Test} element={<Test />} />
          </Routes>
          <Footer />
       </>

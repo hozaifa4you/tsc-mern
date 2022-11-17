@@ -1,16 +1,34 @@
-import * as React from "react";
-import Box from "@mui/joy/Box";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Tabs from "@mui/joy/Tabs";
-import TabList from "@mui/joy/TabList";
-import Tab, { tabClasses } from "@mui/joy/Tab";
-import HomeOutlined from "@mui/icons-material/HomeOutlined";
-import ConstructionIcon from "@mui/icons-material/Construction";
-import EngineeringIcon from "@mui/icons-material/Engineering";
-import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import { useState } from "react";
+import {
+   ListItemDecorator,
+   Tabs,
+   TabList,
+   Tab,
+   tabClasses,
+   Box,
+} from "@mui/joy";
+import {
+   HomeOutlined,
+   Construction,
+   Engineering,
+   AlternateEmail,
+} from "@mui/icons-material";
+import {
+   useLocation,
+   useNavigate,
+   Location,
+   NavigateFunction,
+} from "react-router-dom";
+
+import { MenuUrls } from "../utils/urls";
 
 const NavMenu = () => {
-   const [index, setIndex] = React.useState(0);
+   const [index, setIndex] = useState<number>(0);
+   const { pathname }: Location = useLocation();
+   const navigate: NavigateFunction = useNavigate();
+
+   // console.log(pathname);
+
    const colors = ["primary", "info", "danger", "success"] as const;
 
    return (
@@ -46,37 +64,69 @@ const NavMenu = () => {
             <TabList variant="plain" sx={{ "--List-decorator-size": "28px" }}>
                <Tab
                   orientation="vertical"
-                  {...(index === 0 && { variant: "soft", color: colors[0] })}
+                  {...(pathname === MenuUrls.Home && {
+                     variant: "soft",
+                     color: "primary",
+                  })}
+                  onClick={() => navigate(MenuUrls.Home)}
                >
                   <ListItemDecorator>
-                     <HomeOutlined />
+                     <HomeOutlined
+                        color={
+                           pathname === MenuUrls.Home ? "primary" : "action"
+                        }
+                     />
                   </ListItemDecorator>
                   Home
                </Tab>
                <Tab
                   orientation="vertical"
-                  {...(index === 1 && { variant: "soft", color: colors[0] })}
+                  {...(pathname === MenuUrls.Projects && {
+                     variant: "soft",
+                     color: "primary",
+                  })}
+                  onClick={() => navigate(MenuUrls.Projects)}
                >
                   <ListItemDecorator>
-                     <ConstructionIcon />
+                     <Construction
+                        color={
+                           pathname === MenuUrls.Projects ? "primary" : "action"
+                        }
+                     />
                   </ListItemDecorator>
                   Projects
                </Tab>
                <Tab
                   orientation="vertical"
-                  {...(index === 2 && { variant: "soft", color: colors[0] })}
+                  {...(pathname === MenuUrls.Peoples && {
+                     variant: "soft",
+                     color: "primary",
+                  })}
+                  onClick={() => navigate(MenuUrls.Peoples)}
                >
                   <ListItemDecorator>
-                     <EngineeringIcon />
+                     <Engineering
+                        color={
+                           pathname === MenuUrls.Peoples ? "primary" : "action"
+                        }
+                     />
                   </ListItemDecorator>
                   Peoples
                </Tab>
                <Tab
                   orientation="vertical"
-                  {...(index === 3 && { variant: "soft", color: colors[0] })}
+                  {...(pathname === MenuUrls.Contact && {
+                     variant: "soft",
+                     color: "primary",
+                  })}
+                  onClick={() => navigate(MenuUrls.Contact)}
                >
                   <ListItemDecorator>
-                     <AlternateEmailIcon />
+                     <AlternateEmail
+                        color={
+                           pathname === MenuUrls.Contact ? "primary" : "action"
+                        }
+                     />
                   </ListItemDecorator>
                   Contact
                </Tab>
