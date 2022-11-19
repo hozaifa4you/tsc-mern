@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { load } from "webfontloader";
 import { Routes, Route } from "react-router-dom";
+import "antd/dist/reset.css";
 
 import "./App.css";
 import { Footer, Header, Guest } from "./components";
-import { Home, Login, Contact, Peoples, Projects } from "./pages";
+import { Home, Login, Contact, Peoples, Projects, NotFound } from "./pages";
 import Test from "./pages/Test";
 import { MenuUrls } from "./utils/urls";
 
@@ -34,6 +35,7 @@ const App = () => {
             <Route path={MenuUrls.Peoples} element={<Peoples />} />
             <Route path={MenuUrls.Contact} element={<Contact />} />
             <Route path={MenuUrls.Test} element={<Test />} />
+            <Route path="*" element={<NotFound />} />
          </Routes>
          <Footer />
       </>
