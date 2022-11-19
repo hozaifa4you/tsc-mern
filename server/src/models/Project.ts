@@ -24,11 +24,18 @@ export enum ECategories {
 }
 
 export enum EStatus {
-   UpComing = "UpComing",
+   UpComing = "up coming",
    Progressing = "progressing",
    End = "end",
    Cancel = "cancel",
    Rejected = "rejected",
+}
+
+enum ProjectType {
+   Public = "Public",
+   Closed = "Closed",
+   Secret = "Secret",
+   Private = "Private",
 }
 
 export interface IDocument extends Document {
@@ -37,33 +44,43 @@ export interface IDocument extends Document {
    projectManager: Schema.Types.ObjectId;
    desc: string;
    photos: string[];
-   instructors: Schema.Types.ObjectId[];
+   instructor: Schema.Types.ObjectId;
    joined: Schema.Types.ObjectId[];
    status: IProjectStatus;
    category: ECategories;
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
+   projectType: ProjectType;
 }
 
 const projectSchema = new Schema<IDocument>(
    {
-      creator: { type: Schema.Types.ObjectId, required: true },
-      projectManager: { type: Schema.Types.ObjectId, required: true },
+      creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
+      projectManager: {
+         type: Schema.Types.ObjectId,
+         required: true,
+         ref: "User",
+      },
       title: { type: String, required: true, unique: true },
       desc: { type: String, required: true, trim: true },
       category: { type: String, enum: ECategories, required: true },
       photos: { type: [String], trim: true, default: ["project.png"] },
-      instructors: { type: [Schema.Types.ObjectId] },
-      joined: [Schema.Types.ObjectId],
+      instructor: { type: Schema.Types.ObjectId, ref: "User" },
+      joined: { type: [Schema.Types.ObjectId], ref: "User" },
       status: {
          start: Date,
          end: Date,
          status: { type: String, required: true, enum: EStatus },
       },
-      love: [Schema.Types.ObjectId],
+      love: { type: [Schema.Types.ObjectId], ref: "User" },
       suggestion: [
-         { user: Schema.Types.ObjectId, date: Date, comment: String },
+         {
+            user: { type: Schema.Types.ObjectId, ref: "User" },
+            date: Date,
+            comment: String,
+         },
       ],
+      projectType: { type: String, required: true, enum: ProjectType },
    },
    { timestamps: true }
 );

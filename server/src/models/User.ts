@@ -9,7 +9,7 @@ import bcrypt from "bcryptjs";
 export enum EUsers {
    CEO = "ceo", // TODO can create new user {All user}
    Manager = "manager", // TODO can create new user not ECO
-   DepartmentHead = "department-head", // TODO can create new user not above
+   DepartmentHead = "department head", // TODO can create new user not above
    Admin = "admin", // TODO can create new user {All not CEO and  above}
    Dev = "developer", // TODO can create new user {but restricted}
    Supervisor = "supervisor", // TODO can create only new user
@@ -28,6 +28,7 @@ export interface DocumentTypes extends Document {
    userType: EUsers;
    referBy: Schema.Types.ObjectId | "default";
    projects: Schema.Types.ObjectId[];
+   joinedProjects: Schema.Types.ObjectId[];
    resetPasswordToken: string;
    resetPasswordExpire: Date;
 }
@@ -73,15 +74,16 @@ const userSchema = new Schema<DocumentTypes>(
       userType: {
          type: String,
          enum: EUsers,
-         required: true,
+         required: [true, "You must be selected a user type! 😒🤪"],
          default: EUsers.User,
       },
-      // referBy: {
-      //    type: Schema.Types.ObjectId,
-      //    required: true,
-      //    default: "default",
-      // },
+      referBy: {
+         type: Schema.Types.ObjectId,
+         required: [false, "You need to provide refer by 😒🥵"], // FIXME: fix the required false to true
+         default: "default",
+      },
       projects: [Schema.Types.ObjectId],
+      joinedProjects: [Schema.Types.ObjectId],
       resetPasswordToken: String, // XXX it will help you to reset password
       resetPasswordExpire: Date, // XXX password expire of token
    },

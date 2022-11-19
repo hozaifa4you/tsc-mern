@@ -9,7 +9,12 @@ class ProjectsControllers {
     * @method GET
     */
    async getAllProjects(req: Request, res: Response): Promise<void> {
-      const projects = await Project.find({});
+      const projects = await Project.find({})
+         .populate("creator", ["name", "username"])
+         .populate("projectManager", ["name", "username"])
+         .populate("joined", ["name"])
+         .select("-password");
+
       res.status(200).json(projects);
    }
 
