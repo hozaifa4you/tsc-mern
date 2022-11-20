@@ -4,6 +4,8 @@ export { default as NavbarMenu } from "./Menu";
 export { default as Svg } from "./Svg";
 export { default as AccountSettings } from "./AccountSettings";
 export { default as ProjectCard } from "./ProjectCard";
+export { default as ProjectCard2 } from "./ProjectCard2";
+export { default as ProjectTop } from "./ProjectTop";
 
 export { default as SingleListItem } from "./_Partials/SingleListItem";
 export { default as SocialNavigator } from "./_Partials/SocialNavigator";

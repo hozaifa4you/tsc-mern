@@ -36,14 +36,18 @@ class ProjectsControllers {
     * @method GET
     */
    async getAProjectById(req: Request, res: Response): Promise<void> {
-      const project = await Project.findById(req.params.id);
+      const project = await Project.findOne({
+         slug: req.params.slug.toString(),
+      });
 
       if (!project) {
          res.status(404);
          throw new Error("Project not found!");
       }
 
-      res.status(200).json({ success: true, project: project });
+      project.readTime = project.readTime + 1;
+      const savedProject = await project.save();
+      res.status(200).json({ success: true, project: savedProject });
    }
 
    /**

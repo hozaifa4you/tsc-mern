@@ -51,6 +51,8 @@ export interface IDocument extends Document {
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
    projectType: ProjectType;
+   slug: string;
+   readTime: number;
 }
 
 const projectSchema = new Schema<IDocument>(
@@ -81,6 +83,8 @@ const projectSchema = new Schema<IDocument>(
          },
       ],
       projectType: { type: String, required: true, enum: ProjectType },
+      slug: { type: String, required: true, unique: true, trim: true },
+      readTime: { type: Number, required: true, default: 0 },
    },
    { timestamps: true }
 );

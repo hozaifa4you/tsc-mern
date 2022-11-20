@@ -7,6 +7,7 @@ import { API } from "../../app/API";
 import { toastErrorStyle } from "../../utils/toastStyling";
 
 export interface IProjects {
+   _id: string;
    title?: string;
    creator?: { name: string };
    photos: [string];
@@ -17,6 +18,9 @@ export interface IProjects {
    suggestion?: string[];
    projectType?: string;
    createdAt?: Date;
+   desc: string;
+   readTime: number;
+   slug: string;
 }
 
 interface IProjectsState {

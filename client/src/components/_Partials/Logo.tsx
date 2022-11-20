@@ -7,7 +7,7 @@ const Logo = () => {
    return (
       <>
          <img
-            src="logo.png"
+            src="/logo.png"
             alt="logo"
             width={50}
             style={{ cursor: "pointer", marginRight: 8 }}

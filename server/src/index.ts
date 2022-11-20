@@ -9,6 +9,7 @@ import { dbConnection } from "./utils/dbConnection";
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 import projectRoutes from "./routes/project-routes";
 import userRoutes from "./routes/user-routes";
+import categoryRoutes from "./routes/category-routes";
 
 // HACK config
 const app: Application = express();
@@ -41,6 +42,7 @@ app.use(middleware);
 // HACK endpoints
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/category", categoryRoutes);
 
 // HACK error handler
 app.use([notFound, errorHandler]);

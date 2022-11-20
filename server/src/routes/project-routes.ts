@@ -23,7 +23,7 @@ router
  * @method GET & PUT & DELETE
  */
 router
-   .route("/:id")
+   .route("/:slug")
    .get(asyncHandler(projectsCtrls.getAProjectById))
    .put(
       asyncHandler(authentication),

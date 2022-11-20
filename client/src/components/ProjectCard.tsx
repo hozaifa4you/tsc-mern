@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 
 import { IProjects } from "../redux/reducer/projectsSlice";
+import { MenuUrls } from "../utils/urls";
 
 interface IProjectCardProps {
    project?: IProjects;
@@ -136,7 +137,7 @@ const ProjectCard: FunctionComponent<IProjectCardProps> = ({ project }) => {
          <Typography
             fontSize="18px"
             component={Link}
-            to="/projects/:id"
+            to={`${MenuUrls.Projects}/${project?._id}`} // FIXME: this is should be replace by slug here
             sx={{
                textDecoration: "none",
                transition: "all .3s",
