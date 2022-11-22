@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { Box, Chip, Typography } from "@mui/joy";
 import {
-   Favorite,
+   // Favorite,
    FavoriteBorder,
    Visibility,
    Loupe,

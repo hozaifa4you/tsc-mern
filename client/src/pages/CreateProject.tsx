@@ -1,0 +1,529 @@
+import { ChangeEvent, useState, SyntheticEvent, useEffect } from "react";
+import {
+   Title,
+   ManageAccounts,
+   Check,
+   CancelPresentation,
+   KeyboardReturn,
+   PublishedWithChanges,
+   ClassOutlined,
+   Gamepad,
+   Diversity1,
+   Http,
+   Category,
+   Description,
+} from "@mui/icons-material";
+import {
+   Textarea,
+   Typography,
+   TextField,
+   FormLabel,
+   FormHelperText,
+   Chip,
+   Checkbox,
+   useTheme,
+   Button,
+   Theme,
+   Avatar,
+} from "@mui/joy";
+import {
+   // Autocomplete,
+   Box,
+   Grid,
+   Paper,
+} from "@mui/material";
+import { Container } from "@mui/material";
+import Autocomplete from "@mui/joy/Autocomplete";
+import AutocompleteOption from "@mui/joy/AutocompleteOption";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import ListItemContent from "@mui/joy/ListItemContent";
+import type { UploadFile } from "antd/es/upload/interface";
+import { toast } from "react-hot-toast";
+
+import { EStatus, ProjectType } from "../utils/urls";
+import { Uploader, Breadcrumb } from "../components";
+import { toastErrorStyle } from "../utils/toastStyling";
+import { API } from "../app/API";
+import { useAppSelector } from "../app/hooks";
+import { selectLogin } from "../redux/reducer/authenticationSlice";
+
+const categories = Object.values(EStatus);
+const projectTypes = Object.values(ProjectType);
+type SelectOptions = string | undefined | null;
+interface ICategory {
+   success: boolean;
+   categories: string[];
+}
+
+export interface IUsers {
+   _id: string;
+   name: string;
+   username: string;
+   avatar: string;
+   userType: string;
+}
+
+interface IUserSelect {
+   success: boolean;
+   users: IUsers[];
+}
+
+const CreateProject = () => {
+   const [status, setStatus] = useState<string[]>([]);
+   const [title, setTitle] = useState<string>("");
+   const [slug, setSlug] = useState<string>("");
+   const [proMan, setProMan] = useState<SelectOptions>("");
+   const [desc, setDesc] = useState<string>("");
+   const [instructor, setInstructor] = useState<SelectOptions>("");
+   const [joined, setJoined] = useState<IUsers[]>([]);
+   const [category, setCategory] = useState<SelectOptions>(null);
+   const [proType, setProType] = useState<SelectOptions>("");
+   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+   console.log({
+      status,
+      title,
+      slug,
+      proMan,
+      desc,
+      instructor,
+      joined,
+      category,
+      proType,
+      fileList,
+   });
+
+   const [categoryRes, setCategoryRes] = useState<string[]>([]); // TODO readonly don't save at database
+   const [usersRes, setUsersRes] = useState<IUsers[]>([]); // TODO readonly don't save at database
+   const theme: Theme = useTheme();
+   const { token } = useAppSelector(selectLogin);
+
+   // console.log(fileList); // FIXME: should be remove
+
+   // TODO submit handler
+   const submitHandler = async (event: SyntheticEvent) => {
+      event.preventDefault();
+      const docObj = {};
+   };
+
+   // HACK user Effect
+   useEffect(() => {
+      console.log("useEffect check -> create project"); // FIXME: should be remove
+
+      // TODO fetch category
+      const fetchCategory = async (): Promise<void> => {
+         try {
+            const { data } = await API.get<ICategory>("/api/v1/category");
+
+            if (data.success && data.categories.length > 0) {
+               setCategoryRes(data.categories);
+            } else {
+               toast.error(
+                  "No Category found! Please create some category first! 🥵😡",
+                  toastErrorStyle
+               );
+            }
+         } catch (err: any) {
+            console.log(err); // FIXME: should be remove
+            toast.error(
+               err.response.data.message || err.message,
+               toastErrorStyle
+            );
+            throw err;
+         }
+      };
+
+      // TODO fetch users for select
+      const fetchUsersSelect = async (): Promise<void> => {
+         try {
+            const config = {
+               headers: {
+                  authorization: `Bearer ${token}`,
+               },
+            };
+            const { data } = await API.get<IUserSelect>(
+               "/api/v1/users/select-users",
+               config
+            );
+
+            setUsersRes(data.users);
+         } catch (err: any) {
+            console.log(err); // FIXME: should be remove
+            toast.error(
+               err.response.data.message || err.message,
+               toastErrorStyle
+            );
+            throw err;
+         }
+      };
+
+      fetchCategory();
+      if (!usersRes.length) {
+         fetchUsersSelect();
+      }
+   }, [token, usersRes]);
+
+   return (
+      <Container sx={{ my: 3 }} maxWidth="lg">
+         <Breadcrumb
+            secondLink="/projects"
+            secondText="Projects"
+            finalText="Create New Project"
+         />
+         <Typography
+            fontFamily="Poppins"
+            variant="plain"
+            color="neutral"
+            level="h4"
+            sx={{ m: 1 }}
+         >
+            Create New Project
+         </Typography>
+         <form onSubmit={submitHandler}>
+            <Grid container spacing={3} sx={{ overflow: "hidden" }}>
+               <Grid item sm={12} md={8}>
+                  <Paper
+                     sx={{ m: 1, borderRadius: "1px", padding: 2 }}
+                     elevation={1}
+                  >
+                     <TextField
+                        color="primary"
+                        label="Project Title"
+                        placeholder="Enter a Title"
+                        size="lg"
+                        startDecorator={<Title fontSize="small" />}
+                        sx={{ my: 1 }}
+                        name="title"
+                        value={title}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                           setTitle(event.target.value)
+                        }
+                     />
+                     <FormHelperText>
+                        Sometime title needs to be unique
+                     </FormHelperText>
+                     <TextField
+                        color="primary"
+                        label="Project Slug"
+                        placeholder="Enter a Slug"
+                        size="lg"
+                        startDecorator={<Http fontSize="small" />}
+                        sx={{ my: 1 }}
+                        name="slug"
+                        value={slug}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                           setSlug(event.target.value)
+                        }
+                     />
+                     <FormHelperText>
+                        Unique slug will generate there automatically
+                     </FormHelperText>
+                     <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                           <FormLabel sx={{ my: 0.8 }}>
+                              Select a Category
+                           </FormLabel>
+                           {/* BUG Testing */}
+                           <Autocomplete
+                              placeholder="Categories"
+                              options={categoryRes}
+                              color="primary"
+                              size="lg"
+                              onChange={(event, newValue) => {
+                                 setCategory(newValue);
+                              }}
+                              startDecorator={
+                                 <ClassOutlined fontSize="small" />
+                              }
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                           <FormLabel sx={{ my: 0.8 }}>
+                              Select Project Type
+                           </FormLabel>
+                           <Autocomplete
+                              placeholder="Project Type"
+                              options={projectTypes}
+                              color="primary"
+                              size="lg"
+                              onChange={(event, newValue) => {
+                                 setProType(newValue);
+                              }}
+                              startDecorator={<Category fontSize="small" />}
+                           />
+                        </Grid>
+                     </Grid>
+
+                     <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                           <FormLabel sx={{ my: 0.8 }}>
+                              Select a Project Manager
+                           </FormLabel>
+                           {/* BUG Big blander */}
+                           <Autocomplete
+                              placeholder="Manager"
+                              options={usersRes}
+                              getOptionLabel={(option) => option.name}
+                              renderOption={(props, option) => (
+                                 <AutocompleteOption {...props}>
+                                    <ListItemDecorator>
+                                       {/* FIXME: fix the correct url */}
+                                       <Avatar
+                                          size="sm"
+                                          variant="outlined"
+                                          color="primary"
+                                          src={
+                                             option.avatar === "avatar.png"
+                                                ? "/avatar.png"
+                                                : option.avatar
+                                          }
+                                       />
+                                    </ListItemDecorator>
+                                    <ListItemContent sx={{ fontSize: "sm" }}>
+                                       {option.name}
+                                       <Typography level="body3">
+                                          @{option.username} / {option.userType}
+                                       </Typography>
+                                    </ListItemContent>
+                                 </AutocompleteOption>
+                              )}
+                              color="primary"
+                              size="lg"
+                              onChange={(event, newValue) => {
+                                 setProMan(newValue?._id);
+                              }}
+                              startDecorator={
+                                 <ManageAccounts fontSize="small" />
+                              }
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                           <FormLabel sx={{ my: 0.8 }}>
+                              Select a Instructor
+                           </FormLabel>
+                           <Autocomplete
+                              placeholder="Instructor"
+                              options={usersRes}
+                              getOptionLabel={(option) => option.name}
+                              renderOption={(props, option) => (
+                                 <AutocompleteOption {...props}>
+                                    <ListItemDecorator>
+                                       {/* FIXME: fix the correct url */}
+                                       <Avatar
+                                          size="sm"
+                                          variant="outlined"
+                                          color="primary"
+                                          src={
+                                             option.avatar === "avatar.png"
+                                                ? "/avatar.png"
+                                                : option.avatar
+                                          }
+                                       />
+                                    </ListItemDecorator>
+                                    <ListItemContent sx={{ fontSize: "sm" }}>
+                                       {option.name}
+                                       <Typography level="body3">
+                                          @{option.username} / {option.userType}
+                                       </Typography>
+                                    </ListItemContent>
+                                 </AutocompleteOption>
+                              )}
+                              color="primary"
+                              size="lg"
+                              onChange={(event, newValue) => {
+                                 setInstructor(newValue?._id);
+                              }}
+                              startDecorator={<Gamepad fontSize="small" />}
+                           />
+                        </Grid>
+                     </Grid>
+
+                     <FormLabel sx={{ my: 0.8 }}>
+                        Select some initial join peoples
+                     </FormLabel>
+
+                     <Autocomplete
+                        multiple
+                        placeholder="Who Can Join"
+                        options={usersRes}
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option) => (
+                           <AutocompleteOption {...props}>
+                              <ListItemDecorator>
+                                 {/* FIXME: fix the correct url */}
+                                 <Avatar
+                                    size="sm"
+                                    variant="outlined"
+                                    color="primary"
+                                    src={
+                                       option.avatar === "avatar.png"
+                                          ? "/avatar.png"
+                                          : option.avatar
+                                    }
+                                 />
+                              </ListItemDecorator>
+                              <ListItemContent sx={{ fontSize: "sm" }}>
+                                 {option.name}
+                                 <Typography level="body3">
+                                    @{option.username} / {option.userType}
+                                 </Typography>
+                              </ListItemContent>
+                           </AutocompleteOption>
+                        )}
+                        color="primary"
+                        size="lg"
+                        onChange={(event, newValue) => {
+                           setJoined(newValue);
+                        }}
+                        startDecorator={<Diversity1 fontSize="small" />}
+                     />
+
+                     <Box
+                        sx={{
+                           display: "flex",
+                           gap: 1,
+                           alignItems: "center",
+                           border: "1px solid",
+                           borderRadius: theme.radius.sm,
+                           borderColor: theme.palette.primary[200],
+                           padding: 2,
+                           mt: 3,
+                           mb: 2,
+                        }}
+                     >
+                        <Box>
+                           <Typography
+                              fontWeight="md"
+                              fontSize="lg"
+                              id="fav-movie"
+                              mb={2}
+                           >
+                              Select Status Steps
+                           </Typography>
+                           <Box
+                              role="group"
+                              aria-labelledby="fav-movie"
+                              sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+                           >
+                              {[...categories].map((name) => {
+                                 const checked = status.includes(name);
+                                 return (
+                                    <Chip
+                                       sx={{ textTransform: "capitalize" }}
+                                       key={name}
+                                       variant={checked ? "soft" : "plain"}
+                                       color={checked ? "primary" : "neutral"}
+                                       startDecorator={
+                                          checked && (
+                                             <Check
+                                                sx={{
+                                                   zIndex: 1,
+                                                   pointerEvents: "none",
+                                                }}
+                                             />
+                                          )
+                                       }
+                                    >
+                                       <Checkbox
+                                          variant="outlined"
+                                          color={
+                                             checked ? "primary" : "neutral"
+                                          }
+                                          disableIcon
+                                          overlay
+                                          label={name}
+                                          checked={checked}
+                                          onChange={(event) => {
+                                             setStatus((names) =>
+                                                !event.target.checked
+                                                   ? names.filter(
+                                                        (n) => n !== name
+                                                     )
+                                                   : [...names, name]
+                                             );
+                                          }}
+                                       />
+                                    </Chip>
+                                 );
+                              })}
+                           </Box>
+                        </Box>
+                     </Box>
+
+                     <FormLabel sx={{ my: 0.8 }}>Project Description</FormLabel>
+                     <Textarea
+                        color="primary"
+                        minRows={8}
+                        size="lg"
+                        variant="outlined"
+                        sx={{ mb: 3 }}
+                        name="desc"
+                        value={desc}
+                        onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                           setDesc(event.target.value)
+                        }
+                        placeholder="Write some description about the project"
+                        startDecorator={
+                           <Chip
+                              variant="plain"
+                              color="primary"
+                              startDecorator={<Description fontSize="small" />}
+                           >
+                              Description
+                           </Chip>
+                        }
+                     />
+
+                     {/* TODO uploader */}
+                     <FormLabel sx={{ my: 0.8 }}>
+                        Upload some photos fot the project.
+                     </FormLabel>
+                     <Uploader fileList={fileList} setFileList={setFileList} />
+
+                     <Box
+                        sx={{
+                           display: "flex",
+                           alignItems: "center",
+                           justifyContent: "space-between",
+                           marginY: 2,
+                        }}
+                     >
+                        <Button
+                           variant="outlined"
+                           color="warning"
+                           startDecorator={<KeyboardReturn color="warning" />}
+                        >
+                           Back
+                        </Button>
+                        <Box display="flex" gap={2}>
+                           <Button
+                              variant="solid"
+                              color="danger"
+                              startDecorator={<CancelPresentation />}
+                           >
+                              Cancel
+                           </Button>
+                           <Button
+                              variant="solid"
+                              color="primary"
+                              startDecorator={<PublishedWithChanges />}
+                              type="submit"
+                           >
+                              Publish
+                           </Button>
+                        </Box>
+                     </Box>
+                  </Paper>
+               </Grid>
+               <Grid item sm={12} md={4}>
+                  <Paper sx={{ m: 1, borderRadius: "1px" }} elevation={1}>
+                     Hello Dear
+                  </Paper>
+               </Grid>
+            </Grid>
+         </form>
+      </Container>
+   );
+};
+
+export default CreateProject;

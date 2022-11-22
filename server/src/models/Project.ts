@@ -43,14 +43,14 @@ export interface IDocument extends Document {
    creator: Schema.Types.ObjectId;
    projectManager: Schema.Types.ObjectId;
    desc: string;
-   photos: string[];
+   photos: string[]; // done
    instructor: Schema.Types.ObjectId;
    joined: Schema.Types.ObjectId[];
    status: IProjectStatus;
-   category: ECategories;
+   category: ECategories; // done
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
-   projectType: ProjectType;
+   projectType: ProjectType; // done
    slug: string;
    readTime: number;
 }

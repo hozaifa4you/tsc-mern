@@ -6,11 +6,13 @@ export { default as AccountSettings } from "./AccountSettings";
 export { default as ProjectCard } from "./ProjectCard";
 export { default as ProjectCard2 } from "./ProjectCard2";
 export { default as ProjectTop } from "./ProjectTop";
+export { default as Breadcrumb } from "./Breadcrumbs";
 
 export { default as SingleListItem } from "./_Partials/SingleListItem";
 export { default as SocialNavigator } from "./_Partials/SocialNavigator";
 export { default as Logo } from "./_Partials/Logo";
 export { default as Loader } from "./_Partials/Loader";
+export { default as Uploader } from "./_Partials/Uploader";
 
 export { default as Guest } from "./Authentication/Guest";
 export { default as Protect } from "./Authentication/Protect";

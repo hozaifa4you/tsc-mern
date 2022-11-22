@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 
 import Project from "../models/Project";
@@ -88,6 +87,11 @@ class ProjectsControllers {
       await Project.findByIdAndDelete(req.params.id);
 
       res.status(200).json({ success: true, message: "Project was deleted" });
+   }
+
+   async uploadProjectImage(req: Request, res: Response) {
+      const file = req.files;
+      res.status(200).send(file);
    }
 }
 

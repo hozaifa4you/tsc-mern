@@ -31,6 +31,20 @@ router.route("/").post(
  * @route /api/v1/users/all-users
  */
 router.route("/all-users").get(asyncHandler(userCtrls.getUsers));
+
+// HACK get all users for create user  @return { _id, name, username, avatar, userType }
+/**
+ * @desc get all users
+ * @method GET
+ * @route /api/v1/users/all-users
+ */
+router
+   .route("/select-users")
+   .get(
+      asyncHandler(authentication),
+      asyncHandler(userCtrls.getAllUserForSelect)
+   );
+
 /**
  * @desc get user by id & update a user & delete a user
  * @method GET

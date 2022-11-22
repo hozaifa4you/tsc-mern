@@ -34,7 +34,7 @@ declare global {
 const middleware = [
    morgan("dev"),
    cors({ origin: frontend_origin }),
-   express.json({ limit: "30mb" }),
+   express.json({ limit: "10mb" }),
    express.urlencoded({ limit: "10mb", extended: false }),
 ];
 app.use(middleware);

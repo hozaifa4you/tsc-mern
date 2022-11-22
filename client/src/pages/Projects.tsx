@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { AddTask, Search } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 import { ProjectTop, ProjectCard2, Loader } from "../components";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
@@ -34,6 +35,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const Projects = () => {
    const theme: Theme = useTheme();
    const dispatch = useAppDispatch();
+   const navigate: NavigateFunction = useNavigate();
    const { projects, status } = useAppSelector(selectProjects);
 
    useEffect(() => {
@@ -87,7 +89,7 @@ const Projects = () => {
                                     startDecorator={
                                        <AddTask fontSize="small" />
                                     }
-                                    onClick={() => console.log("clicked")}
+                                    onClick={() => navigate("/projects/create")}
                                  >
                                     Create One
                                  </ButtonJoy>

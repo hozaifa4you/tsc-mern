@@ -1,4 +1,4 @@
-const toastDuration: number = 2500;
+const toastDuration: number = 3000;
 
 export const toastErrorStyle = {
    style: {
@@ -6,7 +6,7 @@ export const toastErrorStyle = {
       padding: "20px",
       color: "#d32f2f",
       backgroundColor: "rgba(251, 233, 231, 0.5)",
-      marginTop: "65px", // FIXME: fix the margin top
+      // marginTop: "65px", // FIXME: fix the margin top
       fontFamily: "Josefin Sans",
    },
    iconTheme: {
@@ -22,7 +22,7 @@ export const toastSuccessStyle = {
       padding: "20px",
       color: "#0f5d26",
       backgroundColor: "#d7f5dd",
-      marginTop: "65px", // FIXME: fix the margin top
+      // marginTop: "65px", // FIXME: fix the margin top
       fontFamily: "Josefin Sans",
    },
    iconTheme: {
@@ -38,7 +38,7 @@ export const toastWarningStyle = {
       padding: "20px",
       color: "#4d2d00",
       backgroundColor: "#fff8c5",
-      marginTop: "65px", // FIXME: fix the margin top
+      // marginTop: "65px", // FIXME: fix the margin top
       fontFamily: "Josefin Sans",
    },
    iconTheme: {
@@ -55,7 +55,7 @@ export const toastInfoStyle = {
       padding: "20px",
       color: "#5f35ae",
       backgroundColor: "#f4eaff",
-      marginTop: "65px", // FIXME: fix the margin top
+      // marginTop: "65px", // FIXME: fix the margin top
       fontFamily: "Josefin Sans",
    },
    iconTheme: {

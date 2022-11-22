@@ -2,7 +2,11 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 
 import projectsCtrls from "../controllers/projects-ctrls";
-import { authentication } from "../middleware/authentications";
+import {
+   authentication,
+   createPermission,
+} from "../middleware/authentications";
+import { upload } from "../middleware/uploader";
 
 const router: Router = Router();
 
@@ -32,6 +36,15 @@ router
    .delete(
       asyncHandler(authentication),
       asyncHandler(projectsCtrls.deleteProjectsById)
+   );
+
+router
+   .route("/upload")
+   .post(
+      asyncHandler(authentication),
+      asyncHandler(createPermission),
+      asyncHandler(upload.array("project", 5)),
+      asyncHandler(projectsCtrls.uploadProjectImage)
    );
 
 export default router;

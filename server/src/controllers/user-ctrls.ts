@@ -198,6 +198,37 @@ class UserControllers {
          ),
       });
    }
+
+   // HACK get all users for create user  @return { _id, name, username, avatar, userType }
+   /**
+    * @desc get all users
+    * @method GET
+    * @route /api/v1/users/all-users
+    */
+   async getAllUserForSelect(req: Request, res: Response) {
+      const users = await User.find({});
+
+      if (!users) {
+         res.status(400);
+         throw new Error("No user found!");
+      }
+
+      res.status(200).json({
+         success: true,
+         users: users.map((user) =>
+            lodash.omit(user.toJSON(), [
+               "password",
+               "__v",
+               "email",
+               "phone",
+               "projects",
+               "createdAt",
+               "updatedAt",
+               "joinedProjects",
+            ])
+         ),
+      });
+   }
 }
 
 export default new UserControllers();
