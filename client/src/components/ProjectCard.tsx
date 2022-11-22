@@ -82,9 +82,7 @@ const ProjectCard: FunctionComponent<IProjectCardProps> = ({ project }) => {
          <CardOverflow>
             <AspectRatio>
                <img
-                  src={
-                     project?.photos[0] === "project.png" ? "project.jpg" : "" // FIXME: fix in future
-                  }
+                  src={project?.photos[0].url}
                   alt={project?.title}
                   loading="lazy"
                />

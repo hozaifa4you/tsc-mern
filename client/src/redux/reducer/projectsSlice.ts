@@ -6,11 +6,18 @@ import { STATUS } from "../STATUS";
 import { API } from "../../app/API";
 import { toastErrorStyle } from "../../utils/toastStyling";
 
+interface IPhotos {
+   uid: string | number;
+   name: string;
+   status: string | "done";
+   url: string;
+}
+
 export interface IProjects {
    _id: string;
    title?: string;
    creator?: { name: string };
-   photos: [string];
+   photos: IPhotos[];
    joined?: string[];
    status?: { status: string };
    category?: string;

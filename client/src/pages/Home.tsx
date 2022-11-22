@@ -32,7 +32,7 @@ const Home = () => {
 
    useEffect(() => {
       console.log("useEffect checked -> Home");
-      if (!projects || !projects.length) {
+      if (projects === null) {
          dispatch(fetchProjects());
       }
    }, [projects, dispatch]);

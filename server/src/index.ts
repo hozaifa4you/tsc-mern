@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import * as Colors from "colors.ts";
 import cors from "cors";
+import path from "path";
 
 import { IJwtPayload } from "./utils/loginOptions";
 import { dbConnection } from "./utils/dbConnection";
@@ -43,6 +44,10 @@ app.use(middleware);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
+
+// HACK static folder
+const dirname = path.resolve();
+app.use("/public", express.static(path.join(dirname, "/public")));
 
 // HACK error handler
 app.use([notFound, errorHandler]);

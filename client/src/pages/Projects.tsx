@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { TextField, Button as ButtonJoy } from "@mui/joy";
+import {
+   TextField,
+   Button as ButtonJoy,
+   Alert,
+   Button,
+   IconButton,
+} from "@mui/joy";
 import {
    Container,
    Grid,
@@ -11,7 +17,7 @@ import {
    Paper,
    Box,
 } from "@mui/material";
-import { AddTask, Search } from "@mui/icons-material";
+import { AddTask, Close, Info, Search } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
@@ -38,9 +44,12 @@ const Projects = () => {
    const navigate: NavigateFunction = useNavigate();
    const { projects, status } = useAppSelector(selectProjects);
 
+   console.log(projects);
+
    useEffect(() => {
       console.log("useEffect checked -> Home");
-      if (!projects || !projects.length) {
+
+      if (projects === null) {
          dispatch(fetchProjects());
       }
    }, [projects, dispatch]);
@@ -103,13 +112,51 @@ const Projects = () => {
                   </Typography>
 
                   <Grid container spacing={5} mb={5}>
-                     {projects &&
-                        projects?.length > 0 &&
+                     {projects && projects?.length > 0 ? (
                         projects?.map((project: IProjects, index: number) => (
                            <Grid item xs={12} sm={6} key={index}>
                               <ProjectCard2 project={project} />
                            </Grid>
-                        ))}
+                        ))
+                     ) : (
+                        <Grid
+                           item
+                           xs={12}
+                           display="flex"
+                           justifyContent="center"
+                        >
+                           <Box sx={{ width: "73%" }}>
+                              <Alert
+                                 startDecorator={<Info sx={{ mx: 0.5 }} />}
+                                 variant="soft"
+                                 color="info"
+                                 endDecorator={
+                                    <>
+                                       <Button
+                                          variant="soft"
+                                          color="info"
+                                          sx={{ mr: 1 }}
+                                       >
+                                          Undo
+                                       </Button>
+                                       <IconButton
+                                          variant="soft"
+                                          size="sm"
+                                          color="info"
+                                       >
+                                          <Close />
+                                       </IconButton>
+                                    </>
+                                 }
+                              >
+                                 <Typography color="danger" fontWeight="md">
+                                    Project Not found!, Please create some
+                                    project first!
+                                 </Typography>
+                              </Alert>
+                           </Box>
+                        </Grid>
+                     )}
                   </Grid>
                </Grid>
             </Grid>
