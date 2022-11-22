@@ -22,11 +22,19 @@ class ProjectsControllers {
     * @method POST
     */
    async createANewProject(req: Request, res: Response): Promise<void> {
-      if (!req.body.title) {
+      const body = req.body;
+
+      if (!body.title) {
          res.status(400);
          throw new Error("Title is required!");
       }
-      await Project.create(req.body);
+
+      if (body?.love?.length || body?.suggestion?.length || body?.readTime) {
+         res.status(500);
+         throw new Error("Some unwanted value added! please remove! 😒🤪");
+      }
+
+      await Project.create({ ...req.body, creator: req.user?.id });
       res.status(201).json({ success: true, message: "new project created!" });
    }
 
@@ -92,6 +100,24 @@ class ProjectsControllers {
    async uploadProjectImage(req: Request, res: Response) {
       const file = req.files;
       res.status(200).send(file);
+   }
+
+   /**
+    * @desc slug unique test
+    * @method GET
+    */
+   async slugTest(req: Request, res: Response) {
+      const slug = req.body.slug;
+
+      const project = await Project.findOne({ slug });
+
+      if (project) {
+         res.status(200).json({ success: false });
+      }
+
+      if (!project) {
+         res.status(200).json({ success: true });
+      }
    }
 }
 

@@ -1,4 +1,10 @@
-import { ChangeEvent, useState, SyntheticEvent, useEffect } from "react";
+import {
+   ChangeEvent,
+   useState,
+   SyntheticEvent,
+   useEffect,
+   FocusEvent,
+} from "react";
 import {
    Title,
    ManageAccounts,
@@ -20,34 +26,40 @@ import {
    FormLabel,
    FormHelperText,
    Chip,
-   Checkbox,
    useTheme,
    Button,
    Theme,
    Avatar,
 } from "@mui/joy";
-import {
-   // Autocomplete,
-   Box,
-   Grid,
-   Paper,
-} from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import { Container } from "@mui/material";
 import Autocomplete from "@mui/joy/Autocomplete";
 import AutocompleteOption from "@mui/joy/AutocompleteOption";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import ListItemContent from "@mui/joy/ListItemContent";
+import RadioGroup from "@mui/joy/RadioGroup";
+import Radio from "@mui/joy/Radio";
 import type { UploadFile } from "antd/es/upload/interface";
 import { toast } from "react-hot-toast";
+import slugify from "react-slugify";
+import { AxiosRequestConfig } from "axios";
+import { customAlphabet } from "nanoid";
+import { useNavigate } from "react-router-dom";
 
 import { EStatus, ProjectType } from "../utils/urls";
 import { Uploader, Breadcrumb } from "../components";
-import { toastErrorStyle } from "../utils/toastStyling";
+import {
+   toastErrorStyle,
+   toastSuccessStyle,
+   toastWarningStyle,
+} from "../utils/toastStyling";
 import { API } from "../app/API";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { selectLogin } from "../redux/reducer/authenticationSlice";
+import { fetchProjects } from "../redux/reducer/projectsSlice";
 
-const categories = Object.values(EStatus);
+const backend_origin = process.env.REACT_APP_BACKEND_URL!;
+const statusArray = Object.values(EStatus);
 const projectTypes = Object.values(ProjectType);
 type SelectOptions = string | undefined | null;
 interface ICategory {
@@ -68,8 +80,17 @@ interface IUserSelect {
    users: IUsers[];
 }
 
+interface ISlugResponse {
+   success: boolean;
+}
+
+interface IProCreResponse {
+   success: boolean;
+   message: string;
+}
+
 const CreateProject = () => {
-   const [status, setStatus] = useState<string[]>([]);
+   const [status, setStatus] = useState<string>("");
    const [title, setTitle] = useState<string>("");
    const [slug, setSlug] = useState<string>("");
    const [proMan, setProMan] = useState<SelectOptions>("");
@@ -80,30 +101,121 @@ const CreateProject = () => {
    const [proType, setProType] = useState<SelectOptions>("");
    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-   console.log({
-      status,
-      title,
-      slug,
-      proMan,
-      desc,
-      instructor,
-      joined,
-      category,
-      proType,
-      fileList,
-   });
-
    const [categoryRes, setCategoryRes] = useState<string[]>([]); // TODO readonly don't save at database
    const [usersRes, setUsersRes] = useState<IUsers[]>([]); // TODO readonly don't save at database
    const theme: Theme = useTheme();
    const { token } = useAppSelector(selectLogin);
+   const dispatch = useAppDispatch();
+   const navigate = useNavigate();
 
    // console.log(fileList); // FIXME: should be remove
+
+   // TODO generate slug
+   const generateSlug = async (
+      event: FocusEvent<HTMLInputElement, Element>
+   ) => {
+      const value = event.target.value;
+      const initialSlug = slugify(value);
+
+      try {
+         const config: AxiosRequestConfig = {
+            headers: { authorization: `Bearer ${token}` },
+         };
+
+         let payload: { slug: string } = { slug: initialSlug };
+
+         const { data } = await API.post<ISlugResponse>(
+            "/api/v1/projects/slug-test",
+            payload,
+            config
+         );
+
+         if (data.success) {
+            setSlug(initialSlug);
+         } else {
+            toast.error(
+               "Your generated slug is not unique, generating new slug 🥵🫥...",
+               toastWarningStyle
+            );
+            const nanoid = customAlphabet(
+               "abcdefghijklmnopqrest1234567890",
+               10
+            )();
+            const secondSlug: string = initialSlug + "-" + nanoid;
+            setSlug(secondSlug);
+         }
+      } catch (err: any) {
+         let errMeg = err.response.data.message || err.message;
+         toast.error(errMeg, toastErrorStyle);
+      }
+   };
 
    // TODO submit handler
    const submitHandler = async (event: SyntheticEvent) => {
       event.preventDefault();
-      const docObj = {};
+
+      const photosArray = fileList.map((x) => {
+         if (x.error) {
+            return toast.error(
+               "Some photo(s) are invalid, please remove",
+               toastWarningStyle
+            );
+         } else {
+            return {
+               uid: x.uid,
+               name: x.name,
+               status: "done",
+               url: `${backend_origin}/public/project-images/${x.response[0].filename}`,
+            };
+         }
+      });
+
+      const payload = {
+         title,
+         projectManager: proMan,
+         desc,
+         instructor,
+         joined: joined.map((x) => x._id),
+         status: status,
+         category,
+         projectType: proType,
+         slug,
+         photos: photosArray,
+      };
+
+      if (payload.photos.length === 0) {
+         return toast.error(
+            "Please add at least one photo! 🥵😡",
+            toastWarningStyle
+         );
+      }
+      if (!payload.status) {
+         return toast.error(
+            "Please add your project running status! 🥵😡",
+            toastErrorStyle
+         );
+      }
+
+      try {
+         const config: AxiosRequestConfig = {
+            headers: { authorization: `Bearer ${token}` },
+         };
+
+         const { data } = await API.post<IProCreResponse>(
+            "/api/v1/projects",
+            payload,
+            config
+         );
+
+         if (data.success) {
+            toast.success(data.message, toastSuccessStyle);
+         }
+         dispatch(fetchProjects());
+         navigate("/projects");
+      } catch (err: any) {
+         let errMsg = err.response.data.message || err.message;
+         toast.error(errMsg, toastErrorStyle);
+      }
    };
 
    // HACK user Effect
@@ -198,10 +310,10 @@ const CreateProject = () => {
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                            setTitle(event.target.value)
                         }
+                        onBlur={generateSlug}
+                        required
                      />
-                     <FormHelperText>
-                        Sometime title needs to be unique
-                     </FormHelperText>
+
                      <TextField
                         color="primary"
                         label="Project Slug"
@@ -214,6 +326,7 @@ const CreateProject = () => {
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                            setSlug(event.target.value)
                         }
+                        required
                      />
                      <FormHelperText>
                         Unique slug will generate there automatically
@@ -235,6 +348,7 @@ const CreateProject = () => {
                               startDecorator={
                                  <ClassOutlined fontSize="small" />
                               }
+                              required
                            />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -242,6 +356,7 @@ const CreateProject = () => {
                               Select Project Type
                            </FormLabel>
                            <Autocomplete
+                              required
                               placeholder="Project Type"
                               options={projectTypes}
                               color="primary"
@@ -261,6 +376,7 @@ const CreateProject = () => {
                            </FormLabel>
                            {/* BUG Big blander */}
                            <Autocomplete
+                              required
                               placeholder="Manager"
                               options={usersRes}
                               getOptionLabel={(option) => option.name}
@@ -302,6 +418,7 @@ const CreateProject = () => {
                               Select a Instructor
                            </FormLabel>
                            <Autocomplete
+                              required
                               placeholder="Instructor"
                               options={usersRes}
                               getOptionLabel={(option) => option.name}
@@ -400,13 +517,14 @@ const CreateProject = () => {
                            >
                               Select Status Steps
                            </Typography>
-                           <Box
-                              role="group"
-                              aria-labelledby="fav-movie"
-                              sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+                           <RadioGroup
+                              name="best-movie"
+                              aria-labelledby="best-movie"
+                              row
+                              sx={{ flexWrap: "wrap", gap: 1 }}
                            >
-                              {[...categories].map((name) => {
-                                 const checked = status.includes(name);
+                              {[...statusArray].map((name) => {
+                                 const checked = status === name;
                                  return (
                                     <Chip
                                        sx={{ textTransform: "capitalize" }}
@@ -424,7 +542,7 @@ const CreateProject = () => {
                                           )
                                        }
                                     >
-                                       <Checkbox
+                                       <Radio
                                           variant="outlined"
                                           color={
                                              checked ? "primary" : "neutral"
@@ -432,26 +550,24 @@ const CreateProject = () => {
                                           disableIcon
                                           overlay
                                           label={name}
+                                          value={name}
                                           checked={checked}
                                           onChange={(event) => {
-                                             setStatus((names) =>
-                                                !event.target.checked
-                                                   ? names.filter(
-                                                        (n) => n !== name
-                                                     )
-                                                   : [...names, name]
-                                             );
+                                             if (event.target.checked) {
+                                                setStatus(name);
+                                             }
                                           }}
                                        />
                                     </Chip>
                                  );
                               })}
-                           </Box>
+                           </RadioGroup>
                         </Box>
                      </Box>
 
                      <FormLabel sx={{ my: 0.8 }}>Project Description</FormLabel>
                      <Textarea
+                        required
                         color="primary"
                         minRows={8}
                         size="lg"

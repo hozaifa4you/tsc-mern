@@ -12,17 +12,6 @@ interface ISuggestions {
    comment: string;
 }
 
-export enum ECategories {
-   WebDevelopment = "web-development",
-   WebDesign = "web-design",
-   FullStackApp = "full-stack-app",
-   FrontendApp = "frontend-app",
-   BackendApp = "backend-app",
-   NodeJs = "node-js",
-   ReactJs = "react-js",
-   Others = "others",
-}
-
 export enum EStatus {
    UpComing = "up coming",
    Progressing = "progressing",
@@ -38,16 +27,23 @@ enum ProjectType {
    Private = "Private",
 }
 
+interface IPhotos {
+   uid: string | number;
+   name: string;
+   status: string | "done";
+   url: string;
+}
+
 export interface IDocument extends Document {
    title: string;
    creator: Schema.Types.ObjectId;
    projectManager: Schema.Types.ObjectId;
    desc: string;
-   photos: string[]; // done
+   photos: IPhotos[]; // done
    instructor: Schema.Types.ObjectId;
    joined: Schema.Types.ObjectId[];
    status: IProjectStatus;
-   category: ECategories; // done
+   category: string; // done
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
    projectType: ProjectType; // done
@@ -63,17 +59,28 @@ const projectSchema = new Schema<IDocument>(
          required: true,
          ref: "User",
       },
-      title: { type: String, required: true, unique: true },
+      title: { type: String, required: true, trim: true },
       desc: { type: String, required: true, trim: true },
-      category: { type: String, enum: ECategories, required: true },
-      photos: { type: [String], trim: true, default: ["project.png"] },
+      category: { type: String, required: true },
+      photos: [
+         {
+            uid: String || Number,
+            name: String,
+            status: { type: String, default: "done" },
+            url: String,
+         },
+      ],
       instructor: { type: Schema.Types.ObjectId, ref: "User" },
       joined: { type: [Schema.Types.ObjectId], ref: "User" },
-      status: {
-         start: Date,
-         end: Date,
-         status: { type: String, required: true, enum: EStatus },
-      },
+      // FIXME: fix in future
+      // status: [
+      //    {
+      //       start: Date,
+      //       end: Date,
+      //       status: { type: String, required: true, enum: EStatus },
+      //    },
+      // ],
+      status: { type: String, required: true, trim: true, enum: EStatus },
       love: { type: [Schema.Types.ObjectId], ref: "User" },
       suggestion: [
          {

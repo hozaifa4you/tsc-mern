@@ -22,6 +22,10 @@ router
       asyncHandler(projectsCtrls.createANewProject)
    );
 
+router
+   .route("/slug-test")
+   .post(asyncHandler(authentication), asyncHandler(projectsCtrls.slugTest));
+
 /**
  * @desc get a project by id & update a project by id & delete a project by id
  * @method GET & PUT & DELETE
