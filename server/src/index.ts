@@ -34,7 +34,7 @@ declare global {
 // HACK middleware
 const middleware = [
    morgan("dev"),
-   cors({ origin: frontend_origin }),
+   cors({ origin: frontend_origin, credentials: true }),
    express.json({ limit: "10mb" }),
    express.urlencoded({ limit: "10mb", extended: false }),
 ];

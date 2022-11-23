@@ -25,14 +25,24 @@ export interface ILoginData {
    password: string;
 }
 
+interface IAddress {
+   address?: string;
+   area?: string;
+   city?: string;
+   state?: string;
+   country?: string;
+   zip_code?: number;
+}
+
 export interface IUser {
    _id: string;
    email: string;
    name: string;
    phone: string;
    userType: string;
-   avatar?: string; // FIXME this is required props, fix in future
+   avatar?: string;
    username: string;
+   address?: IAddress;
    projects?: object[];
 }
 

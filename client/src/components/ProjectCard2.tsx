@@ -27,7 +27,7 @@ const ProjectCard2: FunctionComponent<IProjectCardProps> = ({ project }) => {
          {/* TODO Image */}
          <Box>
             <Avatar
-               src="/project.jpg"
+               src={project.photos[0].url}
                variant="rounded"
                sx={{
                   width: 80,
@@ -52,7 +52,7 @@ const ProjectCard2: FunctionComponent<IProjectCardProps> = ({ project }) => {
          {/* TODO Desc */}
          <Box>
             <Typography
-               fontSize={20}
+               fontSize={18}
                color="primary"
                component={Link}
                to={`/projects/${project.slug}`}
@@ -133,7 +133,7 @@ const ProjectCard2: FunctionComponent<IProjectCardProps> = ({ project }) => {
                </Chip>
             </Box>
             <Typo
-               fontSize={15}
+               fontSize={14}
                color="text.secondary"
                mb={1}
                fontFamily="Roboto"
@@ -150,9 +150,10 @@ const ProjectCard2: FunctionComponent<IProjectCardProps> = ({ project }) => {
                   sx={{
                      "--Chip-gap": "6px",
                      fontFamily: "Josefin Sans",
+                     textTransform: "capitalize",
                   }}
                >
-                  {project.status?.status}
+                  {project?.status}
                </Chip>
                <Chip
                   size="sm"

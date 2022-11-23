@@ -23,7 +23,11 @@ const BreadcrumbsCustom: FC<IBreadcrumb> = ({
    const navigate = useNavigate();
 
    return (
-      <Breadcrumbs separator="›" aria-label="breadcrumbs">
+      <Breadcrumbs
+         separator="›"
+         aria-label="breadcrumbs"
+         sx={{ px: 0, py: 1.8 }}
+      >
          <Link
             onClick={(event) => {
                event.preventDefault();

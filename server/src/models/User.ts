@@ -18,6 +18,21 @@ export enum EUsers {
    User = "user", // TODO can't create new user
 }
 
+interface IAddress {
+   address: string;
+   area: string;
+   city: string;
+   state: string;
+   country: string;
+   zip_code: number;
+}
+
+enum EAccountHealth {
+   Ok = "Okay",
+   Restricted = "Restricted",
+   Baned = "Baned",
+}
+
 export interface DocumentTypes extends Document {
    name: string;
    username: string;
@@ -26,9 +41,11 @@ export interface DocumentTypes extends Document {
    avatar: string;
    password: string;
    userType: EUsers;
-   referBy: Schema.Types.ObjectId | "default";
+   referBy: Schema.Types.ObjectId;
    projects: Schema.Types.ObjectId[];
    joinedProjects: Schema.Types.ObjectId[];
+   address: IAddress;
+   accountHealth: EAccountHealth;
    resetPasswordToken: string;
    resetPasswordExpire: Date;
 }
@@ -84,6 +101,15 @@ const userSchema = new Schema<DocumentTypes>(
       },
       projects: [Schema.Types.ObjectId],
       joinedProjects: [Schema.Types.ObjectId],
+      address: {
+         address: String,
+         area: String,
+         city: String,
+         state: String,
+         country: String,
+         zip_code: Number,
+      },
+      accountHealth: { type: String, enum: EAccountHealth },
       resetPasswordToken: String, // XXX it will help you to reset password
       resetPasswordExpire: Date, // XXX password expire of token
    },

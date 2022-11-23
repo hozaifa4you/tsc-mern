@@ -9,8 +9,13 @@ import {
    Box,
    Divider,
 } from "@mui/material";
-import { Button, Typography as TypographyJoy } from "@mui/joy";
-import { MoreVert } from "@mui/icons-material";
+import {
+   Alert,
+   Button,
+   IconButton,
+   Typography as TypographyJoy,
+} from "@mui/joy";
+import { Close, Info, MoreVert } from "@mui/icons-material";
 
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ProjectCard, Loader } from "../components";
@@ -75,16 +80,49 @@ const Home = () => {
                </Box>
             </Box>
             <Divider />
-            <Grid container spacing={3} mb={5}>
-               {projects &&
-                  projects?.length > 0 &&
+            <Grid container spacing={3} mb={5} my={1}>
+               {projects && projects?.length > 0 ? (
                   projects
                      ?.slice(0, 8)
                      ?.map((project: IProjects, index: number) => (
                         <Grid item sm={12} md={4} xl={3} key={index}>
                            <ProjectCard project={project} />
                         </Grid>
-                     ))}
+                     ))
+               ) : (
+                  <Grid item xs={12} display="flex" justifyContent="center">
+                     <Box sx={{ width: "73%" }}>
+                        <Alert
+                           startDecorator={<Info sx={{ mx: 0.5 }} />}
+                           variant="soft"
+                           color="info"
+                           endDecorator={
+                              <>
+                                 <Button
+                                    variant="soft"
+                                    color="info"
+                                    sx={{ mr: 1 }}
+                                 >
+                                    Undo
+                                 </Button>
+                                 <IconButton
+                                    variant="soft"
+                                    size="sm"
+                                    color="info"
+                                 >
+                                    <Close />
+                                 </IconButton>
+                              </>
+                           }
+                        >
+                           <Typography color="danger" fontWeight="md">
+                              Project Not found!, Please create some project
+                              first!
+                           </Typography>
+                        </Alert>
+                     </Box>
+                  </Grid>
+               )}
             </Grid>
          </Container>
       </>

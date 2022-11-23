@@ -12,43 +12,88 @@ const router: Router = Router();
 
 /**
  * @desc Get all projects & create a project
- * @method GET & POST
+ * @method GET
+ * @route /api/v1/projects/get-all-projects
  */
 router
-   .route("/")
-   .get(asyncHandler(projectsCtrls.getAllProjects))
+   .route("/get-all-projects")
+   .get(asyncHandler(projectsCtrls.getAllProjects));
+
+/**
+ * @desc Get all projects & create a project
+ * @method POST
+ * @route /api/v1/projects/get-all-projects
+ */
+router
+   .route("/create-new-projects")
    .post(
       asyncHandler(authentication),
       asyncHandler(projectsCtrls.createANewProject)
    );
 
+/**
+ * @desc test for unique slug
+ * @method POST
+ * @route /api/v1/projects/slug-test
+ */
 router
    .route("/slug-test")
    .post(asyncHandler(authentication), asyncHandler(projectsCtrls.slugTest));
 
 /**
- * @desc get a project by id & update a project by id & delete a project by id
- * @method GET & PUT & DELETE
+ * @desc find project by slug
+ * @method GET
+ * @route /api/v1/projects/find-projects/:slug
  */
 router
-   .route("/:slug")
-   .get(asyncHandler(projectsCtrls.getAProjectById))
+   .route("/find-projects/:slug")
+   .get(asyncHandler(projectsCtrls.getAProjectById));
+
+/**
+ * @desc update project by id
+ * @method PUT
+ * @route /api/v1/projects/update-projects/:id
+ */
+router
+   .route("/update-projects/:id")
    .put(
       asyncHandler(authentication),
       asyncHandler(projectsCtrls.updateProjectById)
-   )
+   );
+
+/**
+ * @desc delete project by id
+ * @method DELETE
+ * @route /api/v1/projects/delete-projects/:id
+ */
+router
+   .route("/delete-projects/:id")
    .delete(
       asyncHandler(authentication),
       asyncHandler(projectsCtrls.deleteProjectsById)
    );
 
+/**
+ * @desc upload project photos
+ * @method POST
+ * @route /api/v1/projects/delete-projects/:id
+ */
 router
-   .route("/upload")
+   .route("/project-photos/upload")
    .post(
       asyncHandler(authentication),
       asyncHandler(createPermission),
       asyncHandler(upload.array("project", 5)),
       asyncHandler(projectsCtrls.uploadProjectImage)
    );
+
+/**
+ * @desc delete project photos
+ * @method POST
+ * @route /api/v1/projects/delete-photo
+ */
+router
+   .route("/delete-photo/delete")
+   .post(asyncHandler(projectsCtrls.deletePhotos));
 
 export default router;

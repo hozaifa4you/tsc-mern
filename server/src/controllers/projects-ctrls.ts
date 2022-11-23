@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import fs, { Stats } from "fs";
 
 import Project from "../models/Project";
 
@@ -104,7 +105,7 @@ class ProjectsControllers {
 
    /**
     * @desc slug unique test
-    * @method GET
+    * @method POST
     */
    async slugTest(req: Request, res: Response) {
       const slug = req.body.slug;
@@ -118,6 +119,41 @@ class ProjectsControllers {
       if (!project) {
          res.status(200).json({ success: true });
       }
+   }
+
+   /**
+    * @desc delete project photos
+    * @method POST
+    */
+   async deletePhotos(req: Request, res: Response, next: NextFunction) {
+      const photo = req.body.photo;
+      if (!photo) {
+         res.status(404);
+         throw new Error("You din't provide photo name!");
+      }
+
+      // const state = fs.stat(`./public/project-images/${photo}`);
+
+      fs.stat(
+         `./public/project-images/${photo}`,
+         function (err: NodeJS.ErrnoException | null, stats: Stats) {
+            if (err) return next(err);
+            else {
+               fs.unlink(
+                  `./public/project-images/${photo}`,
+                  function (err: NodeJS.ErrnoException | null) {
+                     if (err) return next(err);
+                     else {
+                        res.status(200).json({
+                           success: true,
+                           message: "Your image successfully deleted!",
+                        });
+                     }
+                  }
+               );
+            }
+         }
+      );
    }
 }
 

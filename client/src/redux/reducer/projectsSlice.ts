@@ -19,7 +19,7 @@ export interface IProjects {
    creator?: { name: string };
    photos: IPhotos[];
    joined?: string[];
-   status?: { status: string };
+   status?: string;
    category?: string;
    love?: string[];
    suggestion?: string[];
@@ -69,7 +69,9 @@ export const fetchProjects = () => async (dispatch: Dispatch) => {
    dispatch(setStatus(STATUS.LOADING));
 
    try {
-      const { data } = await API.get<IProjects[]>("/api/v1/projects");
+      const { data } = await API.get<IProjects[]>(
+         "/api/v1/projects/get-all-projects"
+      );
       dispatch(setProjects(data));
       dispatch(setStatus(STATUS.IDLE));
    } catch (err: any) {

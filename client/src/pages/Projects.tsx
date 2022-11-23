@@ -28,6 +28,7 @@ import {
    IProjects,
    fetchProjects,
 } from "../redux/reducer/projectsSlice";
+import { selectLogin } from "../redux/reducer/authenticationSlice";
 import { STATUS } from "../redux/STATUS";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -43,6 +44,7 @@ const Projects = () => {
    const dispatch = useAppDispatch();
    const navigate: NavigateFunction = useNavigate();
    const { projects, status } = useAppSelector(selectProjects);
+   const { isAuth, token } = useAppSelector(selectLogin);
 
    console.log(projects);
 
@@ -91,17 +93,21 @@ const Projects = () => {
                               placeholder="Search for a perfect project..."
                               startDecorator={<Search color="primary" />}
                               endDecorator={
-                                 <ButtonJoy
-                                    size="sm"
-                                    variant="outlined"
-                                    color="info"
-                                    startDecorator={
-                                       <AddTask fontSize="small" />
-                                    }
-                                    onClick={() => navigate("/projects/create")}
-                                 >
-                                    Create One
-                                 </ButtonJoy>
+                                 isAuth && token ? (
+                                    <ButtonJoy
+                                       size="sm"
+                                       variant="outlined"
+                                       color="info"
+                                       startDecorator={
+                                          <AddTask fontSize="small" />
+                                       }
+                                       onClick={() =>
+                                          navigate("/projects/create")
+                                       }
+                                    >
+                                       Create One
+                                    </ButtonJoy>
+                                 ) : null
                               }
                            />
                         </Grid>

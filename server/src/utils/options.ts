@@ -7,4 +7,5 @@ export enum ErrorType {
    CastError = "CastError",
    MongoDuplicateError = 11000,
    ValidationError = "ValidationError",
+   NoDirError = "ENOENT",
 }

@@ -7,9 +7,15 @@ import { toast } from "react-hot-toast";
 
 import { useAppSelector } from "../../app/hooks";
 import { selectLogin } from "../../redux/reducer/authenticationSlice";
-import { toastErrorStyle } from "../../utils/toastStyling";
+import { toastErrorStyle, toastWarningStyle } from "../../utils/toastStyling";
+import { API } from "../../app/API";
 
 const backend_origin: string = process.env.REACT_APP_BACKEND_URL!;
+
+interface IDeleteResponse {
+   success: true;
+   message: string;
+}
 
 const getBase64 = (file: RcFile): Promise<string> =>
    new Promise((resolve, reject) => {
@@ -50,6 +56,28 @@ const Uploader: FC<IUploader> = ({ fileList, setFileList }) => {
       setFileList(newFileList);
    };
 
+   const removePhoto = async (file: UploadFile<any>) => {
+      console.log(file);
+      try {
+         const filename = file.response[0].filename;
+         const config = { headers: { authorization: `Bearer ${token}` } };
+         const payload = { photo: filename };
+
+         const { data } = await API.post<IDeleteResponse>(
+            "/api/v1/projects/delete-photo/delete",
+            payload,
+            config
+         );
+         if (data.success) {
+            toast.success(data.message, toastWarningStyle);
+         }
+      } catch (err: any) {
+         let errMsg = err.response.data.message || err.message;
+         toast.error(errMsg, toastErrorStyle);
+         throw err;
+      }
+   };
+
    const uploadButton = (
       <div>
          <PlusOutlined />
@@ -61,7 +89,7 @@ const Uploader: FC<IUploader> = ({ fileList, setFileList }) => {
          <Upload
             multiple
             name="project"
-            action={`${backend_origin}/api/v1/projects/upload`}
+            action={`${backend_origin}/api/v1/projects/project-photos/upload`}
             listType="picture-card"
             fileList={fileList}
             onPreview={handlePreview}
@@ -84,6 +112,8 @@ const Uploader: FC<IUploader> = ({ fileList, setFileList }) => {
             headers={{
                authorization: `Bearer ${token}`,
             }}
+            maxCount={5}
+            onRemove={removePhoto}
          >
             {fileList.length >= 8 ? null : uploadButton}
          </Upload>

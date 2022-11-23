@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import {
    Avatar,
-   Alert,
    Chip,
    Box,
    Card,
@@ -75,9 +74,14 @@ const ProjectCard: FunctionComponent<IProjectCardProps> = ({ project }) => {
                </Typography>
             </Box>
 
-            <Alert variant="soft" color="info" size="sm" sx={{ ml: "auto" }}>
+            <Chip
+               variant="soft"
+               color="info"
+               size="md"
+               sx={{ ml: "auto", "--Chip-radius": "8px" }}
+            >
                {project?.projectType}
-            </Alert>
+            </Chip>
          </Box>
          <CardOverflow>
             <AspectRatio>
@@ -135,7 +139,7 @@ const ProjectCard: FunctionComponent<IProjectCardProps> = ({ project }) => {
          <Typography
             fontSize="18px"
             component={Link}
-            to={`${MenuUrls.Projects}/${project?._id}`} // FIXME: this is should be replace by slug here
+            to={`${MenuUrls.Projects}/${project?.slug}`}
             sx={{
                textDecoration: "none",
                transition: "all .3s",
@@ -175,9 +179,7 @@ const ProjectCard: FunctionComponent<IProjectCardProps> = ({ project }) => {
                color="primary"
                startDecorator={<Loupe />}
             >
-               {project?.joined && project.joined.length > 0
-                  ? project?.joined?.length
-                  : "0 Joined"}
+               {project?.joined?.length} Joined
             </Chip>
 
             <Chip color="info" size="sm" variant="outlined">

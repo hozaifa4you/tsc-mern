@@ -56,6 +56,12 @@ export const errorHandler = (
       status = 406;
    }
 
+   // HACK no directory error
+   if (err.code?.toString() === ErrorType.NoDirError) {
+      message = "File not found or path is invalid!";
+      status = 404;
+   }
+
    return res.status(status).json({
       success: false,
       stack: process.env.NODE_ENV === NODE_ENV.DEV ? err.stack : null,

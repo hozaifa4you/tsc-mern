@@ -13,6 +13,9 @@ export { default as SocialNavigator } from "./_Partials/SocialNavigator";
 export { default as Logo } from "./_Partials/Logo";
 export { default as Loader } from "./_Partials/Loader";
 export { default as Uploader } from "./_Partials/Uploader";
+export { default as ProjectCreateOwner } from "./_Partials/ProjectCreateOwner";
+export { default as SelectCreateOptions } from "./_Partials/SelectCreateOptions";
+export { default as SelectedUtils } from "./_Partials/SelectUtils";
 
 export { default as Guest } from "./Authentication/Guest";
 export { default as Protect } from "./Authentication/Protect";

@@ -16,8 +16,8 @@ import {
    Gamepad,
    Diversity1,
    Http,
-   Category,
    Description,
+   TypeSpecimen,
 } from "@mui/icons-material";
 import {
    Textarea,
@@ -45,9 +45,16 @@ import slugify from "react-slugify";
 import { AxiosRequestConfig } from "axios";
 import { customAlphabet } from "nanoid";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import { EStatus, ProjectType } from "../utils/urls";
-import { Uploader, Breadcrumb } from "../components";
+import {
+   Uploader,
+   Breadcrumb,
+   ProjectCreateOwner,
+   SelectCreateOptions,
+   SelectedUtils,
+} from "../components";
 import {
    toastErrorStyle,
    toastSuccessStyle,
@@ -61,6 +68,7 @@ import { fetchProjects } from "../redux/reducer/projectsSlice";
 const backend_origin = process.env.REACT_APP_BACKEND_URL!;
 const statusArray = Object.values(EStatus);
 const projectTypes = Object.values(ProjectType);
+
 type SelectOptions = string | undefined | null;
 interface ICategory {
    success: boolean;
@@ -107,6 +115,10 @@ const CreateProject = () => {
    const { token } = useAppSelector(selectLogin);
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
+
+   const [selectedMan, setSelectedMan] = useState<IUsers | null>(null);
+   const [selectedInst, setSelectedInst] = useState<IUsers | null>(null);
+   // console.log(selectedMan);
 
    // console.log(fileList); // FIXME: should be remove
 
@@ -276,369 +288,410 @@ const CreateProject = () => {
    }, [token, usersRes]);
 
    return (
-      <Container sx={{ my: 3 }} maxWidth="lg">
-         <Breadcrumb
-            secondLink="/projects"
-            secondText="Projects"
-            finalText="Create New Project"
-         />
-         <Typography
-            fontFamily="Poppins"
-            variant="plain"
-            color="neutral"
-            level="h4"
-            sx={{ m: 1 }}
-         >
-            Create New Project
-         </Typography>
-         <form onSubmit={submitHandler}>
-            <Grid container spacing={3} sx={{ overflow: "hidden" }}>
-               <Grid item sm={12} md={8}>
-                  <Paper
-                     sx={{ m: 1, borderRadius: "1px", padding: 2 }}
-                     elevation={1}
-                  >
-                     <TextField
-                        color="primary"
-                        label="Project Title"
-                        placeholder="Enter a Title"
-                        size="lg"
-                        startDecorator={<Title fontSize="small" />}
-                        sx={{ my: 1 }}
-                        name="title"
-                        value={title}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                           setTitle(event.target.value)
-                        }
-                        onBlur={generateSlug}
-                        required
-                     />
-
-                     <TextField
-                        color="primary"
-                        label="Project Slug"
-                        placeholder="Enter a Slug"
-                        size="lg"
-                        startDecorator={<Http fontSize="small" />}
-                        sx={{ my: 1 }}
-                        name="slug"
-                        value={slug}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                           setSlug(event.target.value)
-                        }
-                        required
-                     />
-                     <FormHelperText>
-                        Unique slug will generate there automatically
-                     </FormHelperText>
-                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                           <FormLabel sx={{ my: 0.8 }}>
-                              Select a Category
-                           </FormLabel>
-                           {/* BUG Testing */}
-                           <Autocomplete
-                              placeholder="Categories"
-                              options={categoryRes}
-                              color="primary"
-                              size="lg"
-                              onChange={(event, newValue) => {
-                                 setCategory(newValue);
-                              }}
-                              startDecorator={
-                                 <ClassOutlined fontSize="small" />
-                              }
-                              required
-                           />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                           <FormLabel sx={{ my: 0.8 }}>
-                              Select Project Type
-                           </FormLabel>
-                           <Autocomplete
-                              required
-                              placeholder="Project Type"
-                              options={projectTypes}
-                              color="primary"
-                              size="lg"
-                              onChange={(event, newValue) => {
-                                 setProType(newValue);
-                              }}
-                              startDecorator={<Category fontSize="small" />}
-                           />
-                        </Grid>
-                     </Grid>
-
-                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                           <FormLabel sx={{ my: 0.8 }}>
-                              Select a Project Manager
-                           </FormLabel>
-                           {/* BUG Big blander */}
-                           <Autocomplete
-                              required
-                              placeholder="Manager"
-                              options={usersRes}
-                              getOptionLabel={(option) => option.name}
-                              renderOption={(props, option) => (
-                                 <AutocompleteOption {...props}>
-                                    <ListItemDecorator>
-                                       {/* FIXME: fix the correct url */}
-                                       <Avatar
-                                          size="sm"
-                                          variant="outlined"
-                                          color="primary"
-                                          src={
-                                             option.avatar === "avatar.png"
-                                                ? "/avatar.png"
-                                                : option.avatar
-                                          }
-                                       />
-                                    </ListItemDecorator>
-                                    <ListItemContent sx={{ fontSize: "sm" }}>
-                                       {option.name}
-                                       <Typography level="body3">
-                                          @{option.username} / {option.userType}
-                                       </Typography>
-                                    </ListItemContent>
-                                 </AutocompleteOption>
-                              )}
-                              color="primary"
-                              size="lg"
-                              onChange={(event, newValue) => {
-                                 setProMan(newValue?._id);
-                              }}
-                              startDecorator={
-                                 <ManageAccounts fontSize="small" />
-                              }
-                           />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                           <FormLabel sx={{ my: 0.8 }}>
-                              Select a Instructor
-                           </FormLabel>
-                           <Autocomplete
-                              required
-                              placeholder="Instructor"
-                              options={usersRes}
-                              getOptionLabel={(option) => option.name}
-                              renderOption={(props, option) => (
-                                 <AutocompleteOption {...props}>
-                                    <ListItemDecorator>
-                                       {/* FIXME: fix the correct url */}
-                                       <Avatar
-                                          size="sm"
-                                          variant="outlined"
-                                          color="primary"
-                                          src={
-                                             option.avatar === "avatar.png"
-                                                ? "/avatar.png"
-                                                : option.avatar
-                                          }
-                                       />
-                                    </ListItemDecorator>
-                                    <ListItemContent sx={{ fontSize: "sm" }}>
-                                       {option.name}
-                                       <Typography level="body3">
-                                          @{option.username} / {option.userType}
-                                       </Typography>
-                                    </ListItemContent>
-                                 </AutocompleteOption>
-                              )}
-                              color="primary"
-                              size="lg"
-                              onChange={(event, newValue) => {
-                                 setInstructor(newValue?._id);
-                              }}
-                              startDecorator={<Gamepad fontSize="small" />}
-                           />
-                        </Grid>
-                     </Grid>
-
-                     <FormLabel sx={{ my: 0.8 }}>
-                        Select some initial join peoples
-                     </FormLabel>
-
-                     <Autocomplete
-                        multiple
-                        placeholder="Who Can Join"
-                        options={usersRes}
-                        getOptionLabel={(option) => option.name}
-                        renderOption={(props, option) => (
-                           <AutocompleteOption {...props}>
-                              <ListItemDecorator>
-                                 {/* FIXME: fix the correct url */}
-                                 <Avatar
-                                    size="sm"
-                                    variant="outlined"
-                                    color="primary"
-                                    src={
-                                       option.avatar === "avatar.png"
-                                          ? "/avatar.png"
-                                          : option.avatar
-                                    }
-                                 />
-                              </ListItemDecorator>
-                              <ListItemContent sx={{ fontSize: "sm" }}>
-                                 {option.name}
-                                 <Typography level="body3">
-                                    @{option.username} / {option.userType}
-                                 </Typography>
-                              </ListItemContent>
-                           </AutocompleteOption>
-                        )}
-                        color="primary"
-                        size="lg"
-                        onChange={(event, newValue) => {
-                           setJoined(newValue);
-                        }}
-                        startDecorator={<Diversity1 fontSize="small" />}
-                     />
-
-                     <Box
-                        sx={{
-                           display: "flex",
-                           gap: 1,
-                           alignItems: "center",
-                           border: "1px solid",
-                           borderRadius: theme.radius.sm,
-                           borderColor: theme.palette.primary[200],
-                           padding: 2,
-                           mt: 3,
-                           mb: 2,
-                        }}
+      <>
+         <Helmet>
+            <title>Create New Project - Project Manager</title>
+         </Helmet>
+         <Container sx={{ my: 3 }} maxWidth="lg">
+            <Breadcrumb
+               secondLink="/projects"
+               secondText="Projects"
+               finalText="Create New Project"
+            />
+            <Typography
+               fontFamily="Poppins"
+               variant="plain"
+               color="neutral"
+               level="h4"
+            >
+               Create New Project
+            </Typography>
+            <form onSubmit={submitHandler}>
+               <Grid container spacing={2.5}>
+                  <Grid item sm={12} md={8}>
+                     <Paper
+                        sx={{ borderRadius: "1px", padding: 3 }}
+                        elevation={1}
                      >
-                        <Box>
-                           <Typography
-                              fontWeight="md"
-                              fontSize="lg"
-                              id="fav-movie"
-                              mb={2}
-                           >
-                              Select Status Steps
-                           </Typography>
-                           <RadioGroup
-                              name="best-movie"
-                              aria-labelledby="best-movie"
-                              row
-                              sx={{ flexWrap: "wrap", gap: 1 }}
-                           >
-                              {[...statusArray].map((name) => {
-                                 const checked = status === name;
-                                 return (
-                                    <Chip
-                                       sx={{ textTransform: "capitalize" }}
-                                       key={name}
-                                       variant={checked ? "soft" : "plain"}
-                                       color={checked ? "primary" : "neutral"}
-                                       startDecorator={
-                                          checked && (
-                                             <Check
-                                                sx={{
-                                                   zIndex: 1,
-                                                   pointerEvents: "none",
-                                                }}
-                                             />
-                                          )
+                        <TextField
+                           color="primary"
+                           label="Project Title"
+                           placeholder="Enter a Title"
+                           size="lg"
+                           startDecorator={<Title fontSize="small" />}
+                           sx={{ my: 1 }}
+                           name="title"
+                           value={title}
+                           onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              setTitle(event.target.value)
+                           }
+                           onBlur={generateSlug}
+                           required
+                        />
+
+                        <TextField
+                           color="primary"
+                           label="Project Slug"
+                           placeholder="Enter a Slug"
+                           size="lg"
+                           startDecorator={<Http fontSize="small" />}
+                           sx={{ my: 1 }}
+                           name="slug"
+                           value={slug}
+                           onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              setSlug(event.target.value)
+                           }
+                           required
+                        />
+                        <FormHelperText>
+                           Unique slug will generate there automatically
+                        </FormHelperText>
+                        <Grid container spacing={2}>
+                           <Grid item xs={12} sm={6}>
+                              <FormLabel sx={{ my: 0.8 }}>
+                                 Select a Category
+                              </FormLabel>
+                              {/* BUG Testing */}
+                              <Autocomplete
+                                 placeholder="Categories"
+                                 options={categoryRes}
+                                 color="primary"
+                                 size="lg"
+                                 onChange={(event, newValue) => {
+                                    setCategory(newValue);
+                                 }}
+                                 startDecorator={
+                                    <ClassOutlined fontSize="small" />
+                                 }
+                                 required
+                              />
+                           </Grid>
+                           <Grid item xs={12} sm={6}>
+                              <FormLabel sx={{ my: 0.8 }}>
+                                 Select Project Type
+                              </FormLabel>
+                              <Autocomplete
+                                 required
+                                 placeholder="Project Type"
+                                 options={projectTypes}
+                                 color="primary"
+                                 size="lg"
+                                 onChange={(event, newValue) => {
+                                    setProType(newValue);
+                                 }}
+                                 startDecorator={
+                                    <TypeSpecimen fontSize="small" />
+                                 }
+                              />
+                           </Grid>
+                        </Grid>
+
+                        <Grid container spacing={2}>
+                           <Grid item xs={12} sm={6}>
+                              <FormLabel sx={{ my: 0.8 }}>
+                                 Select a Project Manager
+                              </FormLabel>
+                              {/* BUG Big blander */}
+                              <Autocomplete
+                                 required
+                                 placeholder="Manager"
+                                 options={usersRes}
+                                 getOptionLabel={(option) => {
+                                    setSelectedMan(option);
+                                    return option.name;
+                                 }}
+                                 renderOption={(props, option) => (
+                                    <AutocompleteOption {...props}>
+                                       <ListItemDecorator>
+                                          <Avatar
+                                             size="sm"
+                                             variant="outlined"
+                                             color="primary"
+                                             src={`/${option.avatar}`}
+                                          />
+                                       </ListItemDecorator>
+                                       <ListItemContent sx={{ fontSize: "sm" }}>
+                                          {option.name}
+                                          <Typography level="body3">
+                                             @{option.username} /{" "}
+                                             {option.userType}
+                                          </Typography>
+                                       </ListItemContent>
+                                    </AutocompleteOption>
+                                 )}
+                                 color="primary"
+                                 size="lg"
+                                 onChange={(event, newValue) => {
+                                    setProMan(newValue?._id);
+                                 }}
+                                 startDecorator={
+                                    <ManageAccounts fontSize="small" />
+                                 }
+                              />
+                           </Grid>
+                           <Grid item xs={12} sm={6}>
+                              <FormLabel sx={{ my: 0.8 }}>
+                                 Select a Instructor
+                              </FormLabel>
+                              <Autocomplete
+                                 required
+                                 placeholder="Instructor"
+                                 options={usersRes}
+                                 getOptionLabel={(option) => {
+                                    setSelectedInst(option);
+                                    return option.name;
+                                 }}
+                                 renderOption={(props, option) => (
+                                    <AutocompleteOption {...props}>
+                                       <ListItemDecorator>
+                                          {/* FIXME: fix the correct url */}
+                                          <Avatar
+                                             size="sm"
+                                             variant="outlined"
+                                             color="primary"
+                                             src={
+                                                option.avatar === "avatar.png"
+                                                   ? "/avatar.png"
+                                                   : option.avatar
+                                             }
+                                          />
+                                       </ListItemDecorator>
+                                       <ListItemContent sx={{ fontSize: "sm" }}>
+                                          {option.name}
+                                          <Typography level="body3">
+                                             @{option.username} /{" "}
+                                             {option.userType}
+                                          </Typography>
+                                       </ListItemContent>
+                                    </AutocompleteOption>
+                                 )}
+                                 color="primary"
+                                 size="lg"
+                                 onChange={(event, newValue) => {
+                                    setInstructor(newValue?._id);
+                                 }}
+                                 startDecorator={<Gamepad fontSize="small" />}
+                              />
+                           </Grid>
+                        </Grid>
+
+                        <FormLabel sx={{ my: 0.8 }}>
+                           Select some initial join peoples
+                        </FormLabel>
+
+                        <Autocomplete
+                           multiple
+                           placeholder="Who Can Join"
+                           options={usersRes}
+                           getOptionLabel={(option) => option.name}
+                           renderOption={(props, option) => (
+                              <AutocompleteOption {...props}>
+                                 <ListItemDecorator>
+                                    {/* FIXME: fix the correct url */}
+                                    <Avatar
+                                       size="sm"
+                                       variant="outlined"
+                                       color="primary"
+                                       src={
+                                          option.avatar === "avatar.png"
+                                             ? "/avatar.png"
+                                             : option.avatar
                                        }
-                                    >
-                                       <Radio
-                                          variant="outlined"
+                                    />
+                                 </ListItemDecorator>
+                                 <ListItemContent sx={{ fontSize: "sm" }}>
+                                    {option.name}
+                                    <Typography level="body3">
+                                       @{option.username} / {option.userType}
+                                    </Typography>
+                                 </ListItemContent>
+                              </AutocompleteOption>
+                           )}
+                           color="primary"
+                           size="lg"
+                           onChange={(event, newValue) => {
+                              setJoined(newValue);
+                           }}
+                           startDecorator={<Diversity1 fontSize="small" />}
+                        />
+
+                        <Box
+                           sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                              border: "1px solid",
+                              borderRadius: theme.radius.sm,
+                              borderColor: theme.palette.primary[200],
+                              padding: 2,
+                              mt: 3,
+                              mb: 2,
+                           }}
+                        >
+                           <Box>
+                              <Typography
+                                 fontWeight="md"
+                                 fontSize="lg"
+                                 id="fav-movie"
+                                 mb={2}
+                              >
+                                 Select Status Steps
+                              </Typography>
+                              <RadioGroup
+                                 name="best-movie"
+                                 aria-labelledby="best-movie"
+                                 row
+                                 sx={{ flexWrap: "wrap", gap: 1 }}
+                              >
+                                 {[...statusArray].map((name) => {
+                                    const checked = status === name;
+                                    return (
+                                       <Chip
+                                          sx={{ textTransform: "capitalize" }}
+                                          key={name}
+                                          variant={checked ? "soft" : "plain"}
                                           color={
                                              checked ? "primary" : "neutral"
                                           }
-                                          disableIcon
-                                          overlay
-                                          label={name}
-                                          value={name}
-                                          checked={checked}
-                                          onChange={(event) => {
-                                             if (event.target.checked) {
-                                                setStatus(name);
+                                          startDecorator={
+                                             checked && (
+                                                <Check
+                                                   sx={{
+                                                      zIndex: 1,
+                                                      pointerEvents: "none",
+                                                   }}
+                                                />
+                                             )
+                                          }
+                                       >
+                                          <Radio
+                                             variant="outlined"
+                                             color={
+                                                checked ? "primary" : "neutral"
                                              }
-                                          }}
-                                       />
-                                    </Chip>
-                                 );
-                              })}
-                           </RadioGroup>
+                                             disableIcon
+                                             overlay
+                                             label={name}
+                                             value={name}
+                                             checked={checked}
+                                             onChange={(event) => {
+                                                if (event.target.checked) {
+                                                   setStatus(name);
+                                                }
+                                             }}
+                                          />
+                                       </Chip>
+                                    );
+                                 })}
+                              </RadioGroup>
+                           </Box>
                         </Box>
-                     </Box>
 
-                     <FormLabel sx={{ my: 0.8 }}>Project Description</FormLabel>
-                     <Textarea
-                        required
-                        color="primary"
-                        minRows={8}
-                        size="lg"
-                        variant="outlined"
-                        sx={{ mb: 3 }}
-                        name="desc"
-                        value={desc}
-                        onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-                           setDesc(event.target.value)
-                        }
-                        placeholder="Write some description about the project"
-                        startDecorator={
-                           <Chip
-                              variant="plain"
-                              color="primary"
-                              startDecorator={<Description fontSize="small" />}
+                        <FormLabel sx={{ my: 0.8 }}>
+                           Project Description
+                        </FormLabel>
+                        <Textarea
+                           required
+                           color="primary"
+                           minRows={8}
+                           size="lg"
+                           variant="outlined"
+                           sx={{ mb: 3 }}
+                           name="desc"
+                           value={desc}
+                           onChange={(
+                              event: ChangeEvent<HTMLTextAreaElement>
+                           ) => setDesc(event.target.value)}
+                           placeholder="Write some description about the project"
+                           startDecorator={
+                              <Chip
+                                 variant="plain"
+                                 color="primary"
+                                 startDecorator={
+                                    <Description fontSize="small" />
+                                 }
+                              >
+                                 Description
+                              </Chip>
+                           }
+                        />
+
+                        {/* TODO uploader */}
+                        <FormLabel sx={{ my: 0.8 }}>
+                           Upload some photos fot the project.
+                        </FormLabel>
+                        <Uploader
+                           fileList={fileList}
+                           setFileList={setFileList}
+                        />
+
+                        <Box
+                           sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              marginY: 2,
+                           }}
+                        >
+                           <Button
+                              variant="outlined"
+                              color="warning"
+                              startDecorator={
+                                 <KeyboardReturn color="warning" />
+                              }
                            >
-                              Description
-                           </Chip>
-                        }
+                              Back
+                           </Button>
+                           <Box display="flex" gap={2}>
+                              <Button
+                                 variant="solid"
+                                 color="danger"
+                                 startDecorator={<CancelPresentation />}
+                              >
+                                 Cancel
+                              </Button>
+                              <Button
+                                 variant="solid"
+                                 color="primary"
+                                 startDecorator={<PublishedWithChanges />}
+                                 type="submit"
+                              >
+                                 Publish
+                              </Button>
+                           </Box>
+                        </Box>
+                     </Paper>
+                  </Grid>
+                  <Grid item sm={12} md={4}>
+                     <ProjectCreateOwner />
+                     <SelectCreateOptions
+                        title="SELECTED MANAGER"
+                        icon={<ManageAccounts fontSize="small" />}
+                        positionColor="danger"
+                        profileColor="primary"
+                        projectColor="warning"
+                        user={selectedMan}
+                     />
+                     <SelectCreateOptions
+                        title="SELECTED Instructor"
+                        icon={<Gamepad fontSize="small" />}
+                        positionColor="primary"
+                        profileColor="info"
+                        projectColor="danger"
+                        user={selectedInst}
                      />
 
-                     {/* TODO uploader */}
-                     <FormLabel sx={{ my: 0.8 }}>
-                        Upload some photos fot the project.
-                     </FormLabel>
-                     <Uploader fileList={fileList} setFileList={setFileList} />
-
-                     <Box
-                        sx={{
-                           display: "flex",
-                           alignItems: "center",
-                           justifyContent: "space-between",
-                           marginY: 2,
-                        }}
-                     >
-                        <Button
-                           variant="outlined"
-                           color="warning"
-                           startDecorator={<KeyboardReturn color="warning" />}
-                        >
-                           Back
-                        </Button>
-                        <Box display="flex" gap={2}>
-                           <Button
-                              variant="solid"
-                              color="danger"
-                              startDecorator={<CancelPresentation />}
-                           >
-                              Cancel
-                           </Button>
-                           <Button
-                              variant="solid"
-                              color="primary"
-                              startDecorator={<PublishedWithChanges />}
-                              type="submit"
-                           >
-                              Publish
-                           </Button>
-                        </Box>
-                     </Box>
-                  </Paper>
+                     <SelectedUtils
+                        category={category}
+                        projectType={proType}
+                        joined={joined.length}
+                        uploadImages={fileList.length}
+                     />
+                  </Grid>
                </Grid>
-               <Grid item sm={12} md={4}>
-                  <Paper sx={{ m: 1, borderRadius: "1px" }} elevation={1}>
-                     Hello Dear
-                  </Paper>
-               </Grid>
-            </Grid>
-         </form>
-      </Container>
+            </form>
+         </Container>
+      </>
    );
 };
 
