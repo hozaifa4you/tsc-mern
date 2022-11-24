@@ -64,16 +64,13 @@ import { API } from "../app/API";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { selectLogin } from "../redux/reducer/authenticationSlice";
 import { fetchProjects } from "../redux/reducer/projectsSlice";
+import { selectUtils, fetchCategories } from "../redux/reducer/utilsSlice";
 
 const backend_origin = process.env.REACT_APP_BACKEND_URL!;
 const statusArray = Object.values(EStatus);
 const projectTypes = Object.values(ProjectType);
 
 type SelectOptions = string | undefined | null;
-interface ICategory {
-   success: boolean;
-   categories: string[];
-}
 
 export interface IUsers {
    _id: string;
@@ -115,10 +112,10 @@ const CreateProject = () => {
    const { token } = useAppSelector(selectLogin);
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
+   const { categories } = useAppSelector(selectUtils);
 
    const [selectedMan, setSelectedMan] = useState<IUsers | null>(null);
    const [selectedInst, setSelectedInst] = useState<IUsers | null>(null);
-   // console.log(selectedMan);
 
    // console.log(fileList); // FIXME: should be remove
 
@@ -214,7 +211,7 @@ const CreateProject = () => {
          };
 
          const { data } = await API.post<IProCreResponse>(
-            "/api/v1/projects",
+            "/api/v1/projects/create-new-projects",
             payload,
             config
          );
@@ -235,27 +232,12 @@ const CreateProject = () => {
       console.log("useEffect check -> create project"); // FIXME: should be remove
 
       // TODO fetch category
-      const fetchCategory = async (): Promise<void> => {
-         try {
-            const { data } = await API.get<ICategory>("/api/v1/category");
-
-            if (data.success && data.categories.length > 0) {
-               setCategoryRes(data.categories);
-            } else {
-               toast.error(
-                  "No Category found! Please create some category first! 🥵😡",
-                  toastErrorStyle
-               );
-            }
-         } catch (err: any) {
-            console.log(err); // FIXME: should be remove
-            toast.error(
-               err.response.data.message || err.message,
-               toastErrorStyle
-            );
-            throw err;
-         }
-      };
+      if (categories === null) {
+         dispatch(fetchCategories());
+      }
+      if (categories?.length) {
+         setCategoryRes(categories);
+      }
 
       // TODO fetch users for select
       const fetchUsersSelect = async (): Promise<void> => {
@@ -281,11 +263,10 @@ const CreateProject = () => {
          }
       };
 
-      fetchCategory();
       if (!usersRes.length) {
          fetchUsersSelect();
       }
-   }, [token, usersRes]);
+   }, [token, usersRes, categories, dispatch]);
 
    return (
       <>

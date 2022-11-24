@@ -6,7 +6,7 @@
    "scripts": {
       "server:dev": "npm run start:dev --prefix server",
       "client:dev": "npm start --prefix client",
-      "dev": "concurrently \"pnpm run server:dev\" \"pnpm run client:dev\""
+      "dev": "concurrently \"yarn server:dev\" \"yarn client:dev\""
    },
    "keywords": [],
    "author": "",

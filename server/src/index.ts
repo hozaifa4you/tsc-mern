@@ -10,7 +10,7 @@ import { dbConnection } from "./utils/dbConnection";
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 import projectRoutes from "./routes/project-routes";
 import userRoutes from "./routes/user-routes";
-import categoryRoutes from "./routes/category-routes";
+import categoryRoutes from "./routes/utils-routes";
 
 // HACK config
 const app: Application = express();
@@ -43,7 +43,7 @@ app.use(middleware);
 // HACK endpoints
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/utils", categoryRoutes);
 
 // HACK static folder
 const dirname = path.resolve();

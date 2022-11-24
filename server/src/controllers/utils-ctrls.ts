@@ -6,7 +6,7 @@ interface ICategory {
    category: string;
 }
 
-class CategoryControllers {
+class UtilsControllers {
    /**
     *
     * @param req {request: Express Request}
@@ -76,4 +76,4 @@ class CategoryControllers {
    }
 }
 
-export default new CategoryControllers();
+export default new UtilsControllers();

@@ -12,16 +12,21 @@ import {
    Typography,
    useTheme,
    Theme,
-   styled,
+   // styled,
    Divider,
-   Paper,
+   // Paper,
    Box,
 } from "@mui/material";
 import { AddTask, Close, Info, Search } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
-import { ProjectTop, ProjectCard2, Loader } from "../components";
+import {
+   ProjectTop,
+   ProjectCard2,
+   Loader,
+   ProjectSidebar,
+} from "../components";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import {
    selectProjects,
@@ -31,13 +36,13 @@ import {
 import { selectLogin } from "../redux/reducer/authenticationSlice";
 import { STATUS } from "../redux/STATUS";
 
-const Item = styled(Paper)(({ theme }) => ({
-   backgroundColor: "#fff",
-   ...theme.typography.body2,
-   padding: theme.spacing(1),
-   textAlign: "center",
-   color: theme.palette.text.secondary,
-}));
+// const Item = styled(Paper)(({ theme }) => ({
+//    backgroundColor: "#fff",
+//    ...theme.typography.body2,
+//    padding: theme.spacing(1),
+//    textAlign: "center",
+//    color: theme.palette.text.secondary,
+// }));
 
 const Projects = () => {
    const theme: Theme = useTheme();
@@ -45,8 +50,6 @@ const Projects = () => {
    const navigate: NavigateFunction = useNavigate();
    const { projects, status } = useAppSelector(selectProjects);
    const { isAuth, token } = useAppSelector(selectLogin);
-
-   console.log(projects);
 
    useEffect(() => {
       console.log("useEffect checked -> Home");
@@ -81,7 +84,9 @@ const Projects = () => {
                   }}
                   md={3}
                >
-                  <Item>xs=Side Bar</Item>
+                  {/* <Item>xs=Side Bar</Item> */}
+                  {/* HACK project sidebar */}
+                  <ProjectSidebar />
                </Grid>
                <Grid item xs={12} sm={12} md={9}>
                   <Box mb={3}>
@@ -113,14 +118,26 @@ const Projects = () => {
                         </Grid>
                      </Grid>
                   </Box>
-                  <Typography variant="h6" my={1}>
-                     Projects
+                  <Typography
+                     variant="h6"
+                     my={1}
+                     fontFamily="Poppins"
+                     fontSize="1.4rem"
+                  >
+                     Projects you can find that!
                   </Typography>
 
                   <Grid container spacing={5} mb={5}>
                      {projects && projects?.length > 0 ? (
                         projects?.map((project: IProjects, index: number) => (
-                           <Grid item xs={12} sm={6} key={index}>
+                           <Grid
+                              item
+                              xs={12}
+                              sm={12}
+                              md={12}
+                              lg={6}
+                              key={index}
+                           >
                               <ProjectCard2 project={project} />
                            </Grid>
                         ))

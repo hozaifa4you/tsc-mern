@@ -76,7 +76,7 @@ export const fetchProjects = () => async (dispatch: Dispatch) => {
       dispatch(setStatus(STATUS.IDLE));
    } catch (err: any) {
       dispatch(setStatus(STATUS.ERROR));
-      let err_message =
+      let err_message: string =
          err.response && err.response.data.message
             ? err.response.data.message
             : err.message;

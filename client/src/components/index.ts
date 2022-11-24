@@ -7,6 +7,7 @@ export { default as ProjectCard } from "./ProjectCard";
 export { default as ProjectCard2 } from "./ProjectCard2";
 export { default as ProjectTop } from "./ProjectTop";
 export { default as Breadcrumb } from "./Breadcrumbs";
+export { default as ProjectSidebar } from "./ProjectSidebar";
 
 export { default as SingleListItem } from "./_Partials/SingleListItem";
 export { default as SocialNavigator } from "./_Partials/SocialNavigator";
