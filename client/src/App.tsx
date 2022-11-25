@@ -40,15 +40,10 @@ const App = () => {
                   </Guest>
                }
             />
-            {/* <Route path={MenuUrls.Projects} element={<Projects />} />
-            <Route
-               path={`${MenuUrls.Projects}/:id`}
-               element={<SingleProject />}
-            /> */}
 
             <Route path={MenuUrls.Projects}>
                <Route path="" index element={<Projects />} />
-               <Route path=":projectId" element={<SingleProject />} />
+               <Route path=":slug" element={<SingleProject />} />
                <Route
                   path="create"
                   element={

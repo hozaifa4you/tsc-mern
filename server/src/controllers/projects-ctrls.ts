@@ -46,7 +46,11 @@ class ProjectsControllers {
    async getAProjectById(req: Request, res: Response): Promise<void> {
       const project = await Project.findOne({
          slug: req.params.slug.toString(),
-      });
+      })
+         .populate("projectManager", ["name", "username", "userType", "avatar"])
+         .populate("instructor", ["name", "username", "userType", "avatar"])
+         .populate("joined", ["name", "username", "userType", "avatar"])
+         .populate("suggestion", ["name", "username", "userType", "avatar"]);
 
       if (!project) {
          res.status(404);

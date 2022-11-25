@@ -42,7 +42,7 @@ export interface IDocument extends Document {
    photos: IPhotos[]; // done
    instructor: Schema.Types.ObjectId;
    joined: Schema.Types.ObjectId[];
-   status: IProjectStatus;
+   status: EStatus;
    category: string; // done
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
