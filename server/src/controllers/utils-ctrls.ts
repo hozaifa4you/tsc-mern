@@ -15,12 +15,14 @@ class UtilsControllers {
    async createCategory(req: Request, res: Response) {
       const { category } = <ICategory>req.body;
 
+      console.log(category);
+
       const categoryDatabase = await Category.findOne({});
 
       let categoryRes;
 
       if (!categoryDatabase) {
-         categoryRes = await Category.create(category);
+         categoryRes = await Category.create({ category });
          res.status(201).json({ success: true, category: categoryRes });
       } else {
          res.status(500);
@@ -48,8 +50,8 @@ class UtilsControllers {
       }
 
       if (!categoryDatabase) {
-         res.status(404);
-         throw new Error("Please create a new category packet!");
+         const categoryRes = await Category.create({ category });
+         res.status(201).json({ success: true, category: categoryRes });
       } else {
          categoryDatabase.category.push(category);
          await categoryDatabase.save();

@@ -2,10 +2,14 @@ import { useEffect } from "react";
 import {
    ClassOutlined,
    KeyboardArrowRight,
+   ReportGmailerrorredOutlined,
    Storm,
    TypeSpecimen,
 } from "@mui/icons-material";
 import {
+   Alert,
+   Box,
+   Button,
    List,
    ListItem,
    ListItemButton,
@@ -13,7 +17,7 @@ import {
    Typography,
    useTheme,
 } from "@mui/joy";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { fetchCategories, selectUtils } from "../redux/reducer/utilsSlice";
@@ -25,12 +29,12 @@ const status = Object.values(EStatus);
 const types = Object.values(ProjectType);
 
 const ProjectSidebar = () => {
-   const { categories } = useAppSelector(selectUtils);
+   const { categories, error } = useAppSelector(selectUtils);
    const dispatch = useAppDispatch();
    const theme = useTheme();
 
-   const { search } = useLocation();
-   console.log(search);
+   // const { search } = useLocation();
+   console.log(error);
 
    const styleObj = {
       transition: "all .3s",
@@ -43,10 +47,10 @@ const ProjectSidebar = () => {
    };
 
    useEffect(() => {
-      if (!categories) {
+      if (!categories && !error) {
          dispatch(fetchCategories());
       }
-   }, [categories, dispatch]);
+   }, [dispatch, categories, error]);
 
    return (
       <Paper style={{ margin: "0px 40px 30px 0px", background: "#fff" }}>
@@ -63,7 +67,7 @@ const ProjectSidebar = () => {
                   sx={{ fontWeight: 500, mb: 0.2 }}
                >
                   <ListItemDecorator>
-                     <Storm />
+                     <Storm color="info" />
                   </ListItemDecorator>
                   Project Status
                </ListItemButton>
@@ -96,7 +100,7 @@ const ProjectSidebar = () => {
             <ListItem endAction={<KeyboardArrowRight />}>
                <ListItemButton color="info" sx={{ fontWeight: 500, mb: 0.2 }}>
                   <ListItemDecorator>
-                     <TypeSpecimen />
+                     <TypeSpecimen color="secondary" />
                   </ListItemDecorator>
                   Project Types
                </ListItemButton>
@@ -126,34 +130,61 @@ const ProjectSidebar = () => {
             {/* HACK end project types */}
             {/* HACK categories */}
             <ListItem endAction={<KeyboardArrowRight />}>
-               <ListItemButton color="danger" sx={{ fontWeight: 500, mb: 0.2 }}>
+               <ListItemButton
+                  color="success"
+                  sx={{ fontWeight: 500, mb: 0.2 }}
+               >
                   <ListItemDecorator>
-                     <ClassOutlined />
+                     <ClassOutlined color="success" />
                   </ListItemDecorator>
                   Categories
                </ListItemButton>
             </ListItem>
-            {categories
-               ? categories.map((category) => (
-                    <ListItem key={category}>
-                       <>
-                          <ListItemDecorator />
-                          <Typography
-                             fontSize="sm"
-                             textTransform="capitalize"
-                             component={Link}
-                             to={{
-                                pathname: "/projects",
-                                search: `category=${category}`,
-                             }}
-                             sx={styleObj}
-                          >
-                             {category}
-                          </Typography>
-                       </>
-                    </ListItem>
-                 ))
-               : null}
+            {categories ? (
+               categories.map((category) => (
+                  <ListItem key={category}>
+                     <>
+                        <ListItemDecorator />
+                        <Typography
+                           fontSize="sm"
+                           textTransform="capitalize"
+                           component={Link}
+                           to={{
+                              pathname: "/projects",
+                              search: `category=${category}`,
+                           }}
+                           sx={styleObj}
+                        >
+                           {category}
+                        </Typography>
+                     </>
+                  </ListItem>
+               ))
+            ) : (
+               <Box padding={3}>
+                  <Alert
+                     variant="soft"
+                     color="danger"
+                     startDecorator={<ReportGmailerrorredOutlined />}
+                     endDecorator={
+                        <Button
+                           size="sm"
+                           variant="outlined"
+                           color="danger"
+                           sx={{
+                              textTransform: "uppercase",
+                              fontSize: "xs",
+                              fontWeight: "xl",
+                           }}
+                        >
+                           Create
+                        </Button>
+                     }
+                  >
+                     Category not found, please create first!
+                  </Alert>
+               </Box>
+            )}
 
             {/* HACK end categories */}
          </List>

@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { RootState } from "../../redux/store";
 import { STATUS } from "../STATUS";
 import { API } from "../../app/API";
-import { toastErrorStyle } from "../../utils/toastStyling";
+import { toastWarningStyle } from "../../utils/toastStyling";
 
 interface IUtilsState {
    categories?: null | string[];
@@ -55,9 +55,9 @@ export const fetchCategories = () => async (dispatch: Dispatch) => {
       dispatch(setError(null));
    } catch (err: any) {
       dispatch(setStatus(STATUS.ERROR));
-      let err_message: string = err.response || err.response.data.message;
+      let err_message: string = err.response.data.message || err.message;
       dispatch(setError(err_message));
-      toast.error(err_message, toastErrorStyle);
+      toast.error(err_message, toastWarningStyle);
    }
 };
 
