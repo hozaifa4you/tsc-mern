@@ -4,11 +4,11 @@ import { Button, Chip, Divider, Typography } from "@mui/joy";
 import {
    Favorite,
    PersonPin,
-   Radar,
    Work,
    WorkspacePremium,
    ManageAccounts,
    Workspaces,
+   LoyaltyOutlined,
 } from "@mui/icons-material";
 
 import { IUsers } from "../../pages/CreateProject";
@@ -83,7 +83,7 @@ const SelectedManager: FC<IPropsTypes> = ({
                </Typography>
                <Box display="flex" gap={1}>
                   <Chip
-                     startDecorator={<Radar fontSize="small" />}
+                     startDecorator={<LoyaltyOutlined fontSize="small" />}
                      size="sm"
                      variant="soft"
                      color={positionColor}

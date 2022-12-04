@@ -159,7 +159,7 @@ const CreateProject = () => {
       }
    };
 
-   // TODO submit handler
+   // HACK submit handler
    const submitHandler = async (event: SyntheticEvent) => {
       event.preventDefault();
 
@@ -231,7 +231,7 @@ const CreateProject = () => {
    useEffect(() => {
       console.log("useEffect check -> create project"); // FIXME: should be remove
 
-      // TODO fetch category
+      // HACK fetch category
       if (categories === null) {
          dispatch(fetchCategories());
       }
@@ -239,7 +239,7 @@ const CreateProject = () => {
          setCategoryRes(categories);
       }
 
-      // TODO fetch users for select
+      // HACK fetch users for select
       const fetchUsersSelect = async (): Promise<void> => {
          try {
             const config = {
@@ -254,7 +254,6 @@ const CreateProject = () => {
 
             setUsersRes(data.users);
          } catch (err: any) {
-            console.log(err); // FIXME: should be remove
             toast.error(
                err.response.data.message || err.message,
                toastErrorStyle
@@ -332,7 +331,7 @@ const CreateProject = () => {
                               <FormLabel sx={{ my: 0.8 }}>
                                  Select a Category
                               </FormLabel>
-                              {/* BUG Testing */}
+
                               <Autocomplete
                                  placeholder="Categories"
                                  options={categoryRes}
@@ -372,7 +371,7 @@ const CreateProject = () => {
                               <FormLabel sx={{ my: 0.8 }}>
                                  Select a Project Manager
                               </FormLabel>
-                              {/* BUG Big blander */}
+
                               <Autocomplete
                                  required
                                  placeholder="Manager"
@@ -425,7 +424,6 @@ const CreateProject = () => {
                                  renderOption={(props, option) => (
                                     <AutocompleteOption {...props}>
                                        <ListItemDecorator>
-                                          {/* FIXME: fix the correct url */}
                                           <Avatar
                                              size="sm"
                                              variant="outlined"
@@ -597,7 +595,7 @@ const CreateProject = () => {
                            }
                         />
 
-                        {/* TODO uploader */}
+                        {/* HACK uploader */}
                         <FormLabel sx={{ my: 0.8 }}>
                            Upload some photos fot the project.
                         </FormLabel>
