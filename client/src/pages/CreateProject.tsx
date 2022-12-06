@@ -45,7 +45,7 @@ import slugify from "react-slugify";
 import { AxiosRequestConfig } from "axios";
 import { customAlphabet } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 import { EStatus, ProjectType } from "../utils/urls";
 import {

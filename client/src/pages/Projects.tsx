@@ -18,7 +18,7 @@ import {
    Box,
 } from "@mui/material";
 import { AddTask, Close, Info, Search } from "@mui/icons-material";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
 import {

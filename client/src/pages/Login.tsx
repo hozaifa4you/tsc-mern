@@ -1,7 +1,7 @@
 import { useState, SyntheticEvent } from "react";
 import { Link, useNavigate, NavigateFunction } from "react-router-dom";
 import { Facebook, Lock, Mail, PermPhoneMsg } from "@mui/icons-material";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import {
    Box,
    Button,

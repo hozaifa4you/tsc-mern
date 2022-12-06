@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { Box, useTheme, Typography, Paper } from "@mui/material";
+import { FC, useState } from "react";
+import { Box, useTheme, Typography, Paper, Button } from "@mui/material";
 
-import { SemiCircleGauge } from "..";
+import { SemiCircleGauge, DetailsModal } from "..";
 
 interface ITitleProps {
    user?: { name: string };
@@ -11,42 +11,59 @@ interface ITitleProps {
 
 const Title: FC<ITitleProps> = ({ user, status, percentage }) => {
    const theme = useTheme();
+   const [open, setOpen] = useState<boolean>(false);
 
    return (
-      <Paper
-         sx={{
-            width: "100%",
-            py: 4,
-            px: 3,
-            display: "flex",
-            alignItems: "center",
-         }}
-      >
-         <Box>
-            <Typography variant="h5" fontWeight="bold" fontFamily="Poppins">
-               Welcome Mr./Mrs {user?.name} Yousuf Ahamad
-            </Typography>
-            <Typography
-               variant="body2"
-               fontFamily="Poppins"
-               color={theme.palette.grey[600]}
-               mt={1}
-            >
-               The project has been {percentage}76% completed till today.
-            </Typography>
-            <Typography
-               variant="body2"
-               fontFamily="Poppins"
-               color={theme.palette.grey[600]}
-            >
-               The project needs to update, edit or customize, you should
-               checkout.
-            </Typography>
-         </Box>
-         <Box ml="auto">
-            <SemiCircleGauge percentage={50} />
-         </Box>
-      </Paper>
+      <>
+         <Paper
+            sx={{
+               width: "100%",
+               py: 4,
+               px: 3,
+               display: "flex",
+               alignItems: "center",
+            }}
+         >
+            <Box>
+               <Typography variant="h5" fontWeight="bold" fontFamily="Poppins">
+                  Welcome Mr./Mrs {user?.name} Yousuf Ahamad
+               </Typography>
+               <Typography
+                  variant="body2"
+                  fontFamily="Poppins"
+                  color={theme.palette.grey[600]}
+                  mt={1}
+               >
+                  The project has been {percentage}76% completed till today.
+               </Typography>
+               <Typography
+                  variant="body2"
+                  fontFamily="Poppins"
+                  color={theme.palette.grey[600]}
+               >
+                  The project needs to update, edit or customize, you should
+                  checkout.
+               </Typography>
+               <Box my={3} gap={1} display="flex">
+                  <Button
+                     variant="outlined"
+                     size="small"
+                     color="info"
+                     onClick={() => setOpen(true)}
+                  >
+                     Project Details
+                  </Button>
+                  <Button variant="contained" size="small" color="error">
+                     Project Edit
+                  </Button>
+               </Box>
+            </Box>
+            <Box ml="auto">
+               <SemiCircleGauge percentage={50} />
+            </Box>
+         </Paper>
+         <DetailsModal open={open} setOpen={setOpen} />
+      </>
    );
 };
 
