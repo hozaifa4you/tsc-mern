@@ -1,35 +1,29 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Textarea, Typography } from "@mui/joy";
+import { Button, Chip, Container, Typography } from "@mui/joy";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import {
-   Avatar,
-   Box,
-   Divider,
-   Grid,
-   Paper,
-   TextField,
-   useTheme,
-} from "@mui/material";
+import { Avatar, Box, Divider, Grid, Paper, useTheme } from "@mui/material";
 
 import { API } from "../app/API";
 import { EStatus, ProjectType } from "../utils/urls";
 import {
    Breadcrumb,
-   ProjectDisplayRight,
-   ProjectTitle,
    ProductDetailsPicChart,
    ProductDetailsImageView,
    ProjectDetailsList,
+   TimeLine,
 } from "../components";
 import {
+   AccountCircle,
    AddComment,
    AddTask,
-   Circle,
    EventAvailable,
    EventRepeat,
    FavoriteBorder,
+   FiberManualRecord,
+   Insights,
    MarkChatRead,
+   PeopleAlt,
    PermMedia,
    Person3,
    PersonAddAlt,
@@ -87,7 +81,7 @@ const SingleProjectDisplay = () => {
    const [project, setProject] = useState<IProject | null>(null);
    const { slug } = useParams();
    const theme = useTheme();
-   const [visible, setVisible] = useState(false);
+   const [timeLIneOpen, setTimeLineOpen] = useState<boolean>(false);
 
    useEffect(() => {
       const fetchProject = async () => {
@@ -110,7 +104,7 @@ const SingleProjectDisplay = () => {
                Project
             </title>
          </Helmet>
-         <Container maxWidth="lg">
+         <Container maxWidth="lg" sx={{ mb: 5 }}>
             <Breadcrumb
                finalText="Project Details"
                secondLink="/projects"
@@ -118,11 +112,6 @@ const SingleProjectDisplay = () => {
             />
 
             <Grid container spacing={3} mt={1}>
-               <Grid item md={12} lg={8}>
-                  {/* HACK title */}
-                  <ProjectTitle />
-               </Grid>
-               <ProjectDisplayRight />
                <Grid item xs={12}>
                   <Paper>
                      <Grid container>
@@ -134,21 +123,23 @@ const SingleProjectDisplay = () => {
                               flexDirection="column"
                               p={4}
                            >
-                              <ProductDetailsPicChart />
-                              <Typography level="h5" fontWeight="md">
-                                 Team Response
-                              </Typography>
                               <Typography
-                                 level="h6"
+                                 level="h5"
                                  textAlign="center"
                                  color="neutral"
                                  fontWeight="sm"
                                  lineHeight="sm"
+                                 mb={1}
                               >
                                  Lorem ipsum dolor sit amet consectetur
                                  adipisicing elit. Porro, velit modi iure quidem
                                  ipsa distinctio.
                               </Typography>
+                              <ProductDetailsPicChart />
+                              <Typography level="h5" fontWeight="md">
+                                 Team Response
+                              </Typography>
+
                               <Box display="flex" gap={3} mt={2}>
                                  <Typography
                                     color="danger"
@@ -189,6 +180,7 @@ const SingleProjectDisplay = () => {
                               </Box>
                            </Box>
                         </Grid>
+
                         <Grid
                            item
                            sm={12}
@@ -221,182 +213,6 @@ const SingleProjectDisplay = () => {
                            </Box>
                         </Grid>
                      </Grid>
-                     <Grid container spacing={2}>
-                        <Grid item sm={6} md={6}>
-                           <Box p={3}>
-                              <Typography
-                                 textTransform="uppercase"
-                                 borderBottom={`1px solid ${theme.palette.grey[300]}`}
-                                 pb={1}
-                              >
-                                 Statistics
-                              </Typography>
-                              <ProjectDetailsList
-                                 title="Project Creator"
-                                 name="Yousuf Ahamad"
-                              />
-                              <ProjectDetailsList
-                                 title="Project Instructor"
-                                 name="Ismail Habib"
-                              />
-                              <ProjectDetailsList
-                                 title="Last Update"
-                                 name="Niloy Jamil"
-                              />
-                           </Box>
-                        </Grid>
-                        <Grid item sm={6} md={6}>
-                           <Box p={3}>
-                              <Typography
-                                 textTransform="uppercase"
-                                 textAlign="right"
-                                 borderBottom={`1px solid ${theme.palette.grey[300]}`}
-                                 pb={1}
-                              >
-                                 Expand Steps
-                              </Typography>
-                              {/*  */}
-                              <ProjectDetailsList
-                                 title="Project Manager"
-                                 name="Ahamad Khan"
-                              />
-                              <ProjectDetailsList
-                                 title="Total Steps"
-                                 name="Total 5 Steps"
-                              />
-                              <ProjectDetailsList
-                                 title="Total Task"
-                                 name="Total 5 Task"
-                              />
-                           </Box>
-                        </Grid>
-                     </Grid>
-                     <Grid container>
-                        <Grid item xs={12} sm={12}>
-                           <Paper
-                              sx={{
-                                 p: "10px 15px",
-                                 mx: 3,
-                                 borderRadius: 1,
-                                 boxShadow: 0,
-                                 bgcolor: theme.palette.grey[200],
-                                 display: "flex",
-                                 gap: 1,
-                                 justifyContent: "space-around",
-                                 mb: 3,
-                              }}
-                           >
-                              <Box>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <EventAvailable
-                                          sx={{
-                                             fontSize: "20px",
-                                          }}
-                                          color="error"
-                                       />
-                                    }
-                                 >
-                                    23/12/2022 04:32PM Sunday
-                                 </Typography>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <EventRepeat
-                                          sx={{
-                                             fontSize: "20px",
-                                          }}
-                                          color="info"
-                                       />
-                                    }
-                                 >
-                                    23/12/2022 04:32PM Sunday
-                                 </Typography>
-                              </Box>
-                              <Box>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <AddTask
-                                          sx={{
-                                             fontSize: "20px",
-                                          }}
-                                          color="success"
-                                       />
-                                    }
-                                 >
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Mollitia, tempora.
-                                 </Typography>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <Person3
-                                          sx={{
-                                             fontSize: "20px",
-                                             color: "magenta",
-                                          }}
-                                       />
-                                    }
-                                 >
-                                    Ismail Habib
-                                 </Typography>
-                              </Box>
-                              <Box>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <PersonAddAlt
-                                          sx={{
-                                             fontSize: "20px",
-                                          }}
-                                          color="primary"
-                                       />
-                                    }
-                                 >
-                                    Eva Bhabi
-                                 </Typography>
-                                 <Typography
-                                    level="body2"
-                                    startDecorator={
-                                       <AddComment
-                                          color="warning"
-                                          sx={{
-                                             fontSize: "20px",
-                                          }}
-                                       />
-                                    }
-                                 >
-                                    Upoma Habiba
-                                 </Typography>
-                              </Box>
-                           </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                           <Box sx={{ mx: 3, my: 1 }}>
-                              <Button
-                                 startDecorator={<PermMedia fontSize="small" />}
-                                 variant="outlined"
-                                 size="sm"
-                              >
-                                 View Medias & Documents
-                              </Button>
-                              <Box my={2}>
-                                 <Image.PreviewGroup>
-                                    <Image
-                                       width={80}
-                                       src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                                    />
-                                    <Image
-                                       width={80}
-                                       src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-                                    />
-                                 </Image.PreviewGroup>
-                              </Box>
-                           </Box>
-                        </Grid>
-                     </Grid>
                   </Paper>
                </Grid>
                <Grid item xs={12} sm={12}>
@@ -425,11 +241,41 @@ const SingleProjectDisplay = () => {
                         </Form.Item>
                      </Box>
                      <Divider />
-                     <Box p={3}>this is sdkljsdfk</Box>
+                     <Box p={3} display="flex" gap={2}>
+                        <Avatar
+                           sx={{ width: "45px", height: "45px" }}
+                           variant="rounded"
+                        />
+                        <Box>
+                           <Box display="flex" gap={1} alignItems="center">
+                              <Typography
+                                 level="body2"
+                                 fontWeight="lg"
+                                 component="span"
+                                 sx={{ color: "#000" }}
+                              >
+                                 Yousuf Ahamad
+                              </Typography>{" "}
+                              <FiberManualRecord sx={{ fontSize: "7px" }} />
+                              <Typography
+                                 level="body2"
+                                 fontWeight="sm"
+                                 component="span"
+                              >
+                                 One month ago
+                              </Typography>
+                           </Box>
+                           <Typography level="body1" fontWeight="sm">
+                              Lorem ipsum dolor sit amet consectetur adipisicing
+                              elit. Recusandae vel culpa earum?
+                           </Typography>
+                        </Box>
+                     </Box>
                   </Paper>
                </Grid>
             </Grid>
          </Container>
+         <TimeLine open={timeLIneOpen} setOpen={setTimeLineOpen} />
       </div>
    );
 };
