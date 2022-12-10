@@ -1,77 +1,371 @@
 import { FC } from "react";
-import { Box, Divider, Modal, ModalClose, Sheet, Typography } from "@mui/joy";
-import { Timeline } from "antd";
-import { Cancel, CheckCircle } from "@mui/icons-material";
+import { Box, Typography } from "@mui/joy";
+import { Tag, Timeline } from "antd";
+import { CheckCircle, Circle } from "@mui/icons-material";
 import { Scrollbars } from "react-custom-scrollbars";
+import { Avatar, useTheme, styled, Paper } from "@mui/material";
 
-interface IPropsTypes {
-   open: boolean;
-   setOpen: any;
-}
+const CustomBox = styled(Box)(({ theme }) => ({
+   "& img": {
+      width: "60px",
+      margin: "5px",
+      borderRadius: "3px",
+      padding: "2px",
+      border: "1px solid #bcc1ca",
+   },
+}));
 
-const TimeLine: FC<IPropsTypes> = ({ open, setOpen }) => {
+const TimeLine = () => {
+   const theme = useTheme();
+
    return (
       <>
-         <Modal
-            aria-labelledby="modal-title"
-            aria-describedby="modal-desc"
-            open={open}
-            onClose={() => setOpen(false)}
-            sx={{
-               display: "flex",
-               justifyContent: "center",
-               alignItems: "center",
-            }}
-         >
-            <Sheet
-               variant="outlined"
-               sx={{
-                  minWidth: 700,
-                  minHeight: 850,
-                  borderRadius: "md",
-                  p: 3,
-                  boxShadow: "lg",
-               }}
-            >
-               <ModalClose
-                  variant="outlined"
-                  sx={{
-                     top: "calc(-1/4 * var(--IconButton-size))",
-                     right: "calc(-1/4 * var(--IconButton-size))",
-                     boxShadow: "0 2px 12px 0 rgba(0 0 0 / 0.2)",
-                     borderRadius: "50%",
-                     bgcolor: "background.body",
-                  }}
-               />
-               <Typography
-                  component="h2"
-                  id="modal-title"
-                  level="h4"
-                  textColor="inherit"
-                  fontWeight="sm"
-                  mb={1.5}
+         <Box>
+            <Timeline style={{ marginTop: 10 }}>
+               <Timeline.Item
+                  color="green"
+                  dot={
+                     <Avatar
+                        src="/avatar.png"
+                        sx={{ width: "25px", height: "25px" }}
+                     />
+                  }
                >
-                  Display all steps that all created!
-               </Typography>
-               <Divider sx={{ mb: 4 }} />
-               <Box>
-                  <Scrollbars style={{ height: 600 }}>
-                     <Timeline mode="alternate" style={{ marginTop: 10 }}>
-                        <Timeline.Item color="green">
-                           Create a services site 2015-09-01
-                        </Timeline.Item>
-                        <Timeline.Item color="green">
-                           Create a services site 2015-09-01
-                        </Timeline.Item>
-                     </Timeline>
-                  </Scrollbars>
-               </Box>
-               <Divider />
-               <Typography textAlign="center" my={2}>
-                  You can update, delete and refactor timeline data.
-               </Typography>
-            </Sheet>
-         </Modal>
+                  <Box>
+                     <Typography
+                        color="primary"
+                        fontSize="sm"
+                        fontWeight="xl2"
+                        component="span"
+                     >
+                        Yousuf Ahamad
+                     </Typography>
+                     <Box display="flex" alignItems="center" gap={1}>
+                        <Tag color="magenta" style={{ margin: 0 }}>
+                           Upcoming
+                        </Tag>
+                        <Typography
+                           fontWeight="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                        >
+                           Created
+                        </Typography>
+                        <Circle sx={{ fontSize: "5px" }} />
+                        <Typography
+                           fontWeight="sm"
+                           fontSize="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                           fontStyle="italic"
+                        >
+                           6 day ago
+                        </Typography>
+                     </Box>
+                     <Typography
+                        fontSize="sm"
+                        fontWeight="sm"
+                        bgcolor="#f7f7f7"
+                        p={1}
+                        my={0.8}
+                        borderRadius={0.5}
+                     >
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Eveniet, facilis. Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit.
+                     </Typography>
+
+                     <CustomBox my={1}>
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                     </CustomBox>
+                  </Box>
+               </Timeline.Item>
+               <Timeline.Item
+                  color="green"
+                  dot={
+                     <Avatar
+                        src="/avatar.png"
+                        sx={{ width: "25px", height: "25px" }}
+                     />
+                  }
+               >
+                  <Box>
+                     <Typography
+                        color="primary"
+                        fontSize="sm"
+                        fontWeight="xl2"
+                        component="span"
+                     >
+                        Yousuf Ahamad
+                     </Typography>
+                     <Box display="flex" alignItems="center" gap={1}>
+                        <Tag color="geekblue" style={{ margin: 0 }}>
+                           Progressing
+                        </Tag>
+                        <Typography
+                           fontWeight="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                        >
+                           Updated
+                        </Typography>
+                        <Circle sx={{ fontSize: "5px" }} />
+                        <Typography
+                           fontWeight="sm"
+                           fontSize="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                           fontStyle="italic"
+                        >
+                           2 day ago
+                        </Typography>
+                     </Box>
+                     <Typography
+                        fontSize="sm"
+                        fontWeight="sm"
+                        bgcolor="#f7f7f7"
+                        p={1}
+                        my={0.8}
+                        borderRadius={0.5}
+                     >
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Exercitationem quos repudiandae impedit vel quisquam
+                        voluptatem reprehenderit veritatis ea nam soluta quod,
+                        voluptates aut asperiores adipisci ratione enim iste
+                        itaque. Quos.
+                     </Typography>
+
+                     <CustomBox my={1}>
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                     </CustomBox>
+                  </Box>
+               </Timeline.Item>
+               <Timeline.Item
+                  dot={
+                     <Paper
+                        elevation={0}
+                        sx={{
+                           bgcolor: "#e7e4e4",
+                           width: "28px",
+                           height: "28px",
+                           display: "flex",
+                           alignItems: "center",
+                           justifyContent: "center",
+                           borderRadius: "50%",
+                        }}
+                     >
+                        <CheckCircle
+                           sx={{
+                              fontSize: "20px",
+                              color: theme.palette.success.light,
+                           }}
+                           color="action"
+                        />
+                     </Paper>
+                  }
+               >
+                  <Box>
+                     <Typography
+                        color="primary"
+                        fontSize="sm"
+                        fontWeight="xl2"
+                        component="span"
+                     >
+                        Yousuf Ahamad
+                     </Typography>
+                     <Box display="flex" alignItems="center" gap={1}>
+                        <Tag color="green" style={{ margin: 0 }}>
+                           Progressing
+                        </Tag>
+                        <Typography
+                           fontWeight="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                        >
+                           1st Step Updated
+                        </Typography>
+                        <Circle sx={{ fontSize: "5px" }} />
+                        <Typography
+                           fontWeight="sm"
+                           fontSize="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                           fontStyle="italic"
+                        >
+                           1 day ago
+                        </Typography>
+                     </Box>
+                     <Typography
+                        fontSize="sm"
+                        fontWeight="sm"
+                        bgcolor="#f7f7f7"
+                        p={1}
+                        my={0.8}
+                        borderRadius={0.5}
+                     >
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Exercitationem quos repudiandae impedit vel quisquam
+                        voluptatem reprehenderit veritatis ea nam soluta quod,
+                        voluptates aut asperiores adipisci ratione enim iste
+                        itaque. Quos.
+                     </Typography>
+
+                     <CustomBox my={1}>
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                     </CustomBox>
+                  </Box>
+               </Timeline.Item>
+               <Timeline.Item
+                  dot={
+                     <Paper
+                        elevation={0}
+                        sx={{
+                           bgcolor: "#e7e4e4",
+                           width: "28px",
+                           height: "28px",
+                           display: "flex",
+                           alignItems: "center",
+                           justifyContent: "center",
+                           borderRadius: "50%",
+                        }}
+                     >
+                        <CheckCircle
+                           sx={{
+                              fontSize: "20px",
+                              color: theme.palette.success.light,
+                           }}
+                        />
+                     </Paper>
+                  }
+               >
+                  <Box>
+                     <Typography
+                        color="primary"
+                        fontSize="sm"
+                        fontWeight="xl2"
+                        component="span"
+                     >
+                        Yousuf Ahamad
+                     </Typography>
+                     <Box display="flex" alignItems="center" gap={1}>
+                        <Tag color="green" style={{ margin: 0 }}>
+                           Progressing
+                        </Tag>
+                        <Typography
+                           fontWeight="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                        >
+                           2nd Step Updated
+                        </Typography>
+                        <Circle sx={{ fontSize: "5px" }} />
+                        <Typography
+                           fontWeight="sm"
+                           fontSize="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                           fontStyle="italic"
+                        >
+                           12 Hours ago
+                        </Typography>
+                     </Box>
+                     <Typography
+                        fontSize="sm"
+                        fontWeight="sm"
+                        bgcolor="#f7f7f7"
+                        p={1}
+                        my={0.8}
+                        borderRadius={0.5}
+                     >
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Exercitationem quos repudiandae impedit vel quisquam
+                        voluptatem reprehenderit veritatis ea nam soluta quod,
+                        voluptates aut asperiores adipisci ratione enim iste
+                        itaque. Quos.
+                     </Typography>
+
+                     <CustomBox my={1}>
+                        <img src="/sample.jpg" alt="project" />
+                        <img src="/sample.jpg" alt="project" />
+                     </CustomBox>
+                  </Box>
+               </Timeline.Item>
+               <Timeline.Item
+                  color="green"
+                  dot={
+                     <Avatar
+                        src="/avatar.png"
+                        sx={{ width: "25px", height: "25px" }}
+                     />
+                  }
+               >
+                  <Box>
+                     <Typography
+                        color="primary"
+                        fontSize="sm"
+                        fontWeight="xl2"
+                        component="span"
+                     >
+                        Yousuf Ahamad
+                     </Typography>
+                     <Box display="flex" alignItems="center" gap={1}>
+                        <Tag color="purple" style={{ margin: 0 }}>
+                           End
+                        </Tag>
+                        <Typography
+                           fontWeight="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                        >
+                           Created
+                        </Typography>
+                        <Circle sx={{ fontSize: "5px" }} />
+                        <Typography
+                           fontWeight="sm"
+                           fontSize="sm"
+                           sx={{
+                              color: "#A6A9B0",
+                           }}
+                           fontStyle="italic"
+                        >
+                           6 day ago
+                        </Typography>
+                     </Box>
+                     <Typography
+                        fontSize="sm"
+                        fontWeight="sm"
+                        bgcolor="#f7f7f7"
+                        p={1}
+                        my={0.8}
+                        borderRadius={0.5}
+                     >
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Eveniet, facilis. Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit.
+                     </Typography>
+
+                     <CustomBox my={1}>
+                        <img src="/sample.jpg" alt="project" />
+                     </CustomBox>
+                  </Box>
+               </Timeline.Item>
+            </Timeline>
+         </Box>
       </>
    );
 };

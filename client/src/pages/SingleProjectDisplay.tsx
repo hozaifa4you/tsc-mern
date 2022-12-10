@@ -3,32 +3,39 @@ import { Button, Chip, Container, Typography } from "@mui/joy";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Avatar, Box, Divider, Grid, Paper, useTheme } from "@mui/material";
+import {
+   AccessTime,
+   AddTask,
+   ArrowRightAlt,
+   Celebration,
+   FavoriteBorder,
+   FiberManualRecord,
+   History,
+   HourglassTopOutlined,
+   Loupe,
+   ManageHistory,
+   MarkChatRead,
+   MoreTime,
+   PostAdd,
+   Settings,
+   Signpost,
+} from "@mui/icons-material";
+import { Input } from "antd";
 
 import { API } from "../app/API";
 import { EStatus, ProjectType } from "../utils/urls";
 import {
    Breadcrumb,
-   ProductDetailsPicChart,
+   TeamResponse,
    ProductDetailsImageView,
-   ProjectDetailsList,
+   MemberListItem,
    TimeLine,
+   ComingEvents,
+   ActivitySingle,
+   SingleUtils,
+   TimelineAdd,
+   DocumentDisplay,
 } from "../components";
-import {
-   AccountCircle,
-   AddComment,
-   AddTask,
-   EventAvailable,
-   EventRepeat,
-   FavoriteBorder,
-   FiberManualRecord,
-   Insights,
-   MarkChatRead,
-   PeopleAlt,
-   PermMedia,
-   Person3,
-   PersonAddAlt,
-} from "@mui/icons-material";
-import { Form, Image, Input } from "antd";
 
 // ["name", "username", "userType", "avatar"]
 
@@ -81,7 +88,6 @@ const SingleProjectDisplay = () => {
    const [project, setProject] = useState<IProject | null>(null);
    const { slug } = useParams();
    const theme = useTheme();
-   const [timeLIneOpen, setTimeLineOpen] = useState<boolean>(false);
 
    useEffect(() => {
       const fetchProject = async () => {
@@ -126,22 +132,24 @@ const SingleProjectDisplay = () => {
                               <Typography
                                  level="h5"
                                  textAlign="center"
-                                 color="neutral"
-                                 fontWeight="sm"
+                                 fontWeight="md"
                                  lineHeight="sm"
                                  mb={1}
+                                 color="primary"
+                                 fontFamily="Josefin Sans"
                               >
                                  Lorem ipsum dolor sit amet consectetur
                                  adipisicing elit. Porro, velit modi iure quidem
                                  ipsa distinctio.
                               </Typography>
-                              <ProductDetailsPicChart />
+                              <TeamResponse />
                               <Typography level="h5" fontWeight="md">
                                  Team Response
                               </Typography>
 
                               <Box display="flex" gap={3} mt={2}>
                                  <Typography
+                                    fontSize="sm"
                                     color="danger"
                                     startDecorator={
                                        <FavoriteBorder
@@ -151,9 +159,10 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    4.5K LOVES
+                                    4.5K Love
                                  </Typography>
                                  <Typography
+                                    fontSize="sm"
                                     color="info"
                                     startDecorator={
                                        <MarkChatRead
@@ -165,18 +174,54 @@ const SingleProjectDisplay = () => {
                                  >
                                     5.3K Suggestions
                                  </Typography>
-                                 <Typography
+                                 <Chip
+                                    size="sm"
+                                    variant="outlined"
                                     color="primary"
                                     startDecorator={
-                                       <PermMedia
+                                       <HourglassTopOutlined
                                           fontSize="small"
                                           color="info"
                                        />
                                     }
+                                 >
+                                    Progressing
+                                 </Chip>
+                              </Box>
+                              <Box display="flex" gap={1} mt={2}>
+                                 <Typography
+                                    fontSize="sm"
+                                    color="neutral"
+                                    startDecorator={
+                                       <AccessTime
+                                          fontSize="small"
+                                          color="action"
+                                       />
+                                    }
                                     level="body2"
                                  >
-                                    6 Medias
+                                    25 Jun 2022 03:40 PM
                                  </Typography>
+                                 <Typography
+                                    fontSize="sm"
+                                    startDecorator={
+                                       <ManageHistory
+                                          fontSize="small"
+                                          sx={{ color: "WindowFrame" }}
+                                       />
+                                    }
+                                    level="body2"
+                                 >
+                                    25 Jun 2022 03:40 PM
+                                 </Typography>
+
+                                 <Button
+                                    size="sm"
+                                    variant="soft"
+                                    startDecorator={<Signpost />}
+                                 >
+                                    Details
+                                 </Button>
                               </Box>
                            </Box>
                         </Grid>
@@ -215,30 +260,221 @@ const SingleProjectDisplay = () => {
                      </Grid>
                   </Paper>
                </Grid>
+
+               <Grid item xs={12} sm={12}>
+                  <Grid container spacing={3}>
+                     <Grid item xs={12} sm={12} md={5}>
+                        <Paper sx={{ p: 3 }}>
+                           <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                              mb={2}
+                           >
+                              <Typography fontWeight="lg" fontSize="lg">
+                                 JOINED MEMBERS
+                              </Typography>
+                              <Button
+                                 size="sm"
+                                 variant="plain"
+                                 startDecorator={<Loupe />}
+                              >
+                                 Add Member
+                              </Button>
+                           </Box>
+                           <Divider />
+
+                           <MemberListItem />
+                           <Divider />
+                           <MemberListItem />
+                           <Divider />
+                           <MemberListItem />
+                           <Divider />
+                           <MemberListItem />
+                           <Divider />
+                           <MemberListItem />
+                           <Divider />
+                           <MemberListItem />
+
+                           <Divider />
+                           <Box
+                              mt={2}
+                              display="flex"
+                              alignItems="center"
+                              justifyContent={"space-between"}
+                           >
+                              <div></div>
+                              <Typography
+                                 endDecorator={
+                                    <ArrowRightAlt fontSize="small" />
+                                 }
+                                 color="info"
+                              >
+                                 See Members
+                              </Typography>
+                           </Box>
+                        </Paper>
+                     </Grid>
+                     <Grid item xs={12} sm={12} md={3}>
+                        <Grid container spacing={2}>
+                           <Grid
+                              item
+                              xs={12}
+                              sm={12}
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                           >
+                              <Typography
+                                 fontWeight="sm"
+                                 startDecorator={
+                                    <Celebration fontSize="small" />
+                                 }
+                              >
+                                 Upcoming Events
+                              </Typography>
+                              <Button
+                                 size="sm"
+                                 variant="outlined"
+                                 color="info"
+                                 startDecorator={<AddTask fontSize="small" />}
+                              >
+                                 Create One
+                              </Button>
+                           </Grid>
+
+                           <ComingEvents />
+
+                           <ComingEvents />
+                        </Grid>
+                     </Grid>
+                     <Grid item xs={12} sm={12} md={4}>
+                        <Grid container spacing={2}>
+                           <Grid
+                              item
+                              xs={12}
+                              sm={12}
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                           >
+                              <Typography
+                                 fontWeight="sm"
+                                 startDecorator={<Settings fontSize="small" />}
+                              >
+                                 Utilities
+                              </Typography>
+                           </Grid>
+                           {/* HACK UTILS */}
+                           <SingleUtils />
+                        </Grid>
+                     </Grid>
+                  </Grid>
+               </Grid>
+
+               {/* HACK timeline */}
+               <Grid item xs={12} sm={12} md={7}>
+                  <Box
+                     display="flex"
+                     alignItems="center"
+                     justifyContent="space-between"
+                     mb={1}
+                  >
+                     <Typography
+                        level="h6"
+                        startDecorator={<ManageHistory fontSize="small" />}
+                     >
+                        Project Timeline
+                     </Typography>
+                  </Box>
+                  <Paper sx={{ p: 3 }}>
+                     <TimeLine />
+                  </Paper>
+               </Grid>
+
+               {/* HACK Activity */}
+               <Grid item xs={12} sm={12} md={5}>
+                  <Box
+                     display="flex"
+                     alignItems="center"
+                     justifyContent="space-between"
+                     mb={1}
+                  >
+                     <Typography
+                        level="h6"
+                        startDecorator={<MoreTime fontSize="small" />}
+                     >
+                        Add New Timeline
+                     </Typography>
+                  </Box>
+                  <Box>
+                     <Grid container spacing={2}>
+                        {/* input here */}
+                        <TimelineAdd />
+                        {/* input */}
+                        <Grid item xs={12} sm={12} md={12}>
+                           <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                              mb={1}
+                           >
+                              <Typography
+                                 level="h6"
+                                 startDecorator={<History fontSize="small" />}
+                              >
+                                 Activity History
+                              </Typography>
+                              <Typography
+                                 fontWeight="sm"
+                                 fontSize="sm"
+                                 color="info"
+                                 endDecorator={
+                                    <ArrowRightAlt fontSize="small" />
+                                 }
+                              >
+                                 More Activity
+                              </Typography>
+                           </Box>
+                        </Grid>
+
+                        <ActivitySingle />
+                        <ActivitySingle />
+                     </Grid>
+                  </Box>
+               </Grid>
+
+               <Grid item xs={12} sm={12}>
+                  <Paper sx={{ p: 2 }}>
+                     <Typography level="h6" mb={2}>
+                        All Documents
+                     </Typography>
+
+                     <DocumentDisplay />
+                  </Paper>
+               </Grid>
+
                <Grid item xs={12} sm={12}>
                   <Paper>
-                     <Box display="flex" gap={1} p={3}>
-                        <Avatar
-                           sx={{ width: "45px", height: "45px" }}
-                           variant="circular"
-                        />
-
-                        <Form.Item
-                           name={["user", "introduction"]}
-                           style={{ width: "100%", marginBottom: 0 }}
-                        >
+                     <Box p={2} display="flex" flexDirection="column">
+                        <Box display="flex" gap={1}>
+                           <Avatar
+                              sx={{ width: "45px", height: "45px" }}
+                              variant="circular"
+                           />
                            <Input.TextArea
                               style={{ width: "100%", height: "130px" }}
                               placeholder="What is your suggestions about the project?"
                            />
-                           <Button
-                              sx={{ marginLeft: "auto", mt: 1.5 }}
-                              variant="outlined"
-                              size="sm"
-                           >
-                              Post a suggestion
-                           </Button>
-                        </Form.Item>
+                        </Box>
+                        <Button
+                           sx={{ marginLeft: "auto", mt: 1.5 }}
+                           variant="soft"
+                           size="sm"
+                           startDecorator={<PostAdd />}
+                        >
+                           Post a suggestion
+                        </Button>
                      </Box>
                      <Divider />
                      <Box p={3} display="flex" gap={2}>
@@ -265,7 +501,11 @@ const SingleProjectDisplay = () => {
                                  One month ago
                               </Typography>
                            </Box>
-                           <Typography level="body1" fontWeight="sm">
+                           <Typography
+                              level="body1"
+                              fontWeight="sm"
+                              color="neutral"
+                           >
                               Lorem ipsum dolor sit amet consectetur adipisicing
                               elit. Recusandae vel culpa earum?
                            </Typography>
@@ -275,7 +515,6 @@ const SingleProjectDisplay = () => {
                </Grid>
             </Grid>
          </Container>
-         <TimeLine open={timeLIneOpen} setOpen={setTimeLineOpen} />
       </div>
    );
 };

@@ -1,18 +1,18 @@
 import { Component } from "react";
 import ReactApexChart from "react-apexcharts";
 
-class ProductDetailsPie extends Component {
+class TeamResponse extends Component {
    constructor(props) {
       super(props);
 
       this.state = {
-         series: [44, 55, 13, 43, 22],
+         series: [44, 55, 13, 43],
          options: {
             chart: {
                width: 330,
                type: "pie",
             },
-            labels: ["Good", "Negative", "Positive", "Nothing", "Blur"],
+            labels: ["Good", "Positive", "Nothing", "Negative"],
             responsive: [
                {
                   breakpoint: 480,
@@ -44,4 +44,4 @@ class ProductDetailsPie extends Component {
    }
 }
 
-export default ProductDetailsPie;
+export default TeamResponse;
