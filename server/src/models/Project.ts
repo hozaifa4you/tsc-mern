@@ -1,17 +1,5 @@
 import { Schema, model, Document } from "mongoose";
 
-interface IProjectStatus {
-   start: Date;
-   end: Date;
-   status: EStatus;
-}
-
-interface ISuggestions {
-   user: Schema.Types.ObjectId;
-   date: Date;
-   comment: string;
-}
-
 export enum EStatus {
    UpComing = "up coming",
    Progressing = "progressing",
@@ -27,6 +15,27 @@ enum ProjectType {
    Private = "Private",
 }
 
+export enum EEventStatus {
+   UpComing = "up coming",
+   Progressing = "progressing",
+   End = "end",
+   Cancel = "cancel",
+}
+
+interface IProjectStatus {
+   creator: Schema.Types.ObjectId;
+   date: Date;
+   status: EStatus;
+   desc: string;
+   photos: string[];
+}
+
+interface ISuggestions {
+   user: Schema.Types.ObjectId;
+   date: Date;
+   comment: string;
+}
+
 interface IPhotos {
    uid: string | number;
    name: string;
@@ -34,21 +43,40 @@ interface IPhotos {
    url: string;
 }
 
+interface ITeamResponseData {
+   good: Schema.Types.ObjectId[];
+   positive: Schema.Types.ObjectId[];
+   nothing: Schema.Types.ObjectId[];
+   bad: Schema.Types.ObjectId[];
+}
+
+interface IEventsData {
+   creator: Schema.Types.ObjectId;
+   eventName: string;
+   createDate: Date;
+   startingDate: Date;
+   endDate: Date;
+   desc: string;
+   status: EEventStatus;
+}
+
 export interface IDocument extends Document {
    title: string;
    creator: Schema.Types.ObjectId;
    projectManager: Schema.Types.ObjectId;
    desc: string;
-   photos: IPhotos[]; // done
+   photos: IPhotos[];
    instructor: Schema.Types.ObjectId;
    joined: Schema.Types.ObjectId[];
-   status: EStatus;
-   category: string; // done
+   status: IProjectStatus; // TODO recent fixed
+   category: string;
    love: Schema.Types.ObjectId[];
    suggestion: ISuggestions[];
-   projectType: ProjectType; // done
+   projectType: ProjectType;
    slug: string;
    readTime: number;
+   teamResponse: ITeamResponseData;
+   events: IEventsData[];
 }
 
 const projectSchema = new Schema<IDocument>(
@@ -72,15 +100,15 @@ const projectSchema = new Schema<IDocument>(
       ],
       instructor: { type: Schema.Types.ObjectId, ref: "User" },
       joined: { type: [Schema.Types.ObjectId], ref: "User" },
-      // FIXME: fix in future
-      // status: [
-      //    {
-      //       start: Date,
-      //       end: Date,
-      //       status: { type: String, required: true, enum: EStatus },
-      //    },
-      // ],
-      status: { type: String, required: true, trim: true, enum: EStatus },
+      status: [
+         {
+            creator: { type: Schema.Types.ObjectId, ref: "User" },
+            date: Date,
+            status: { type: String, enum: EStatus },
+            desc: String,
+            photos: [String],
+         },
+      ],
       love: { type: [Schema.Types.ObjectId], ref: "User" },
       suggestion: [
          {
@@ -92,6 +120,23 @@ const projectSchema = new Schema<IDocument>(
       projectType: { type: String, required: true, enum: ProjectType },
       slug: { type: String, required: true, unique: true, trim: true },
       readTime: { type: Number, required: true, default: 0 },
+      teamResponse: {
+         good: [{ type: Schema.Types.ObjectId, ref: "User" }],
+         positive: [{ type: Schema.Types.ObjectId, ref: "User" }],
+         bad: [{ type: Schema.Types.ObjectId, ref: "User" }],
+         nothing: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      },
+      events: [
+         {
+            creator: { type: Schema.Types.ObjectId, ref: "User" },
+            eventNames: String,
+            createDate: Date,
+            startingDate: Date,
+            endDate: Date,
+            desc: String,
+            status: { type: String, enum: EEventStatus },
+         },
+      ],
    },
    { timestamps: true }
 );
