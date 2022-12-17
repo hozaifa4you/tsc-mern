@@ -5,8 +5,13 @@ class TeamResponse extends Component {
    constructor(props) {
       super(props);
 
+      const bad = this.props?.data?.bad.length;
+      const good = this.props?.data?.good.length;
+      const nothing = this.props?.data?.nothing.length;
+      const positive = this.props?.data?.positive.length;
+
       this.state = {
-         series: [44, 55, 13, 43],
+         series: [good, positive, nothing, bad],
          options: {
             chart: {
                width: 330,

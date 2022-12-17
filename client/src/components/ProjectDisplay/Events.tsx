@@ -1,4 +1,4 @@
-import * as React from "react";
+import { FC } from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
 import CardOverflow from "@mui/joy/CardOverflow";
@@ -6,28 +6,33 @@ import Divider from "@mui/joy/Divider";
 import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Link from "@mui/joy/Link";
-import Favorite from "@mui/icons-material/Favorite";
 import { Grid } from "@mui/material";
 import { Celebration } from "@mui/icons-material";
 
-const Event = () => {
+import { IEventTypes } from "../../pages/SingleProjectDisplay";
+import moment from "moment";
+
+interface IPropTypes {
+   event: IEventTypes;
+}
+
+const Event: FC<IPropTypes> = ({ event }) => {
    return (
       <Grid item xs={12} sm={12} display="flex" justifyContent="center">
          <Card variant="outlined" sx={{ width: 320 }}>
             <CardOverflow>
                <AspectRatio ratio="2">
                   <img
-                     src="https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318"
-                     srcSet="https://images.unsplash.com/photo-1532614338840-ab30cf10ed36?auto=format&fit=crop&w=318&dpr=2 2x"
+                     src={event.photo}
+                     srcSet={`${event.photo} 2x`}
                      loading="lazy"
-                     alt=""
+                     alt={event.eventNames}
                   />
                </AspectRatio>
                <IconButton
                   aria-label="Like minimal photography"
                   size="md"
                   variant="solid"
-                  color="warning"
                   sx={{
                      position: "absolute",
                      zIndex: 2,
@@ -37,16 +42,18 @@ const Event = () => {
                      transform: "translateY(50%)",
                   }}
                >
-                  <Celebration sx={{ color: "#eb001f" }} />
+                  <Celebration sx={{ color: "#ebc000" }} />
                </IconButton>
             </CardOverflow>
             <Typography level="h2" sx={{ fontSize: "md", mt: 2 }}>
                <Link href="#multiple-actions" overlay underline="none">
-                  Yosemite National Park
+                  {event.eventNames}
                </Link>
             </Typography>
             <Typography level="body2" sx={{ mt: 0.5, mb: 2 }}>
-               <Link href="#multiple-actions">California</Link>
+               <Link href="#multiple-actions" fontSize="sm" color="neutral">
+                  {event.creator.name}
+               </Link>
             </Typography>
             <Divider inset="context" />
             <CardOverflow
@@ -63,14 +70,23 @@ const Event = () => {
                   level="body3"
                   sx={{ fontWeight: "md", color: "text.secondary" }}
                >
-                  6.3k views
+                  {moment(event.createDate).fromNow()}
                </Typography>
                <Divider orientation="vertical" />
                <Typography
                   level="body3"
-                  sx={{ fontWeight: "md", color: "text.secondary" }}
+                  sx={{ fontWeight: "md" }}
+                  color="success"
                >
-                  1 hour ago
+                  {moment(event.startingDate).fromNow()}
+               </Typography>
+               <Divider orientation="vertical" />
+               <Typography
+                  level="body3"
+                  sx={{ fontWeight: "md" }}
+                  color="danger"
+               >
+                  {moment(event.endDate).fromNow()}
                </Typography>
             </CardOverflow>
          </Card>

@@ -58,6 +58,7 @@ interface IEventsData {
    endDate: Date;
    desc: string;
    status: EEventStatus;
+   photo: string;
 }
 
 export interface IDocument extends Document {
@@ -135,6 +136,7 @@ const projectSchema = new Schema<IDocument>(
             endDate: Date,
             desc: String,
             status: { type: String, enum: EEventStatus },
+            photo: String,
          },
       ],
    },

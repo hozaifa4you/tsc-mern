@@ -22,8 +22,10 @@ import {
    Visibility,
    WorkOutlined,
 } from "@mui/icons-material";
+import moment from "moment";
 
 import { EStatus } from "../../utils/urls";
+import { IProject, IStatusTypes } from "../../pages/SingleProjectDisplay";
 
 const CustomUl = styled("ul")(() => ({
    listStyle: "none",
@@ -49,9 +51,11 @@ interface ICusComPropsTypes {
    icon?: JSX.Element;
 }
 
-const iconFixForStatus = (status: EStatus): JSX.Element => {
-   console.log(status === EStatus.Progressing);
+interface IPropType {
+   data: IProject;
+}
 
+const iconFixForStatus = (status: EStatus): JSX.Element => {
    switch (status) {
       case EStatus.UpComing:
          return <HourglassBottom fontSize="small" />;
@@ -68,6 +72,16 @@ const iconFixForStatus = (status: EStatus): JSX.Element => {
       default:
          return <Cancel fontSize="small" />;
    }
+};
+
+const getDocumentLength = (status: IStatusTypes[]): number => {
+   let num: number = 0;
+
+   for (let i = 0; i < status.length; i++) {
+      num = num + status[i].photos.length;
+   }
+
+   return num;
 };
 
 const CustomComponent: FC<ICusComPropsTypes> = ({
@@ -124,86 +138,86 @@ const CustomComponent: FC<ICusComPropsTypes> = ({
    );
 };
 
-const SingleUtils = () => {
+const SingleUtils: FC<IPropType> = ({ data }) => {
    return (
       <Grid item xs={12} sm={12}>
          <Paper variant="outlined" sx={{ p: 1.5, width: "368px" }}>
             <CustomComponent
                icon={<Fingerprint fontSize="small" />}
-               text="#626781"
+               text={`#${data._id}`}
                name="Project ID"
             />
             <CustomComponent
                icon={<MoreTime fontSize="small" />}
-               text="10 Apr 1995 12:00 AM"
+               text={moment(data.createdAt).format("llll")}
                name="Created"
             />
             <CustomComponent
                icon={<EventRepeat fontSize="small" />}
-               text="10 Apr 1996 12:00 AM"
+               text={moment(data.updatedAt).fromNow()}
                name="Last Update"
             />
             <CustomComponent
-               text="Yousuf Ahamad"
+               text={data.creator.name}
                icon={<PersonAdd fontSize="small" />}
                name="Created"
                isLink
-               link="/users/profile/id"
+               link={`/users/${data.creator.username}`}
             />
             <CustomComponent
                icon={<ManageAccounts fontSize="small" />}
-               text="Ismail Habib Khan"
+               text={data.projectManager.name}
                name="Director"
                isLink
-               link="/users/profile/id"
+               link={`/users/${data.projectManager.username}`}
             />
             <CustomComponent
                icon={<Gamepad fontSize="small" />}
-               text="Eva Bhabi"
+               text={data.instructor.name}
                name="Instructor"
                isLink
-               link="/users/profile/id"
+               link={`/users/${data.instructor.username}`}
             />
             <CustomComponent
                icon={<Diversity1 fontSize="small" />}
-               text="10 Person"
+               text={`${data.joined.length} Person`}
                name="Joined"
-               isLink
-               link="/users/profile/id"
             />
             <CustomComponent
                icon={<ClassOutlined fontSize="small" />}
-               text="Programming"
+               text={data.category}
                name="Category"
             />
             <CustomComponent
                icon={<AddModerator fontSize="small" />}
-               text={EStatus.Progressing}
+               text={data.status[data.status.length - 1].status}
                name="Status"
             />
             <CustomComponent
                icon={<TypeSpecimen fontSize="small" />}
-               text="Closed"
+               text={data.projectType}
                name="Type"
             />
             <CustomComponent
                icon={<Visibility fontSize="small" />}
-               text="710 Times"
+               text={`${data.readTime} Times Read`}
                name="Read"
             />
             <CustomComponent
                icon={<Attachment fontSize="small" />}
-               text="10 Documents"
+               text={`${
+                  data.photos.length + getDocumentLength(data.status)
+               } Documents`}
                name="Media"
             />
             <CustomComponent
                icon={<Http fontSize="small" />}
-               text="why-do-we-use-it"
+               text={data.slug}
                name="Slug"
             />
             <CustomComponent
                icon={<Title fontSize="small" />}
-               text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, velit modi iure quidem ipsa distinctio."
+               text={data.title}
                name="Title"
             />
          </Paper>

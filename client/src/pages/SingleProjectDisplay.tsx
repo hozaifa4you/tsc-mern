@@ -21,9 +21,10 @@ import {
    Signpost,
 } from "@mui/icons-material";
 import { Input } from "antd";
+import { toast } from "react-hot-toast";
 
 import { API } from "../app/API";
-import { EStatus, ProjectType } from "../utils/urls";
+import { EStatus, ProjectType, EUserTypes, EEventStatus } from "../utils/urls";
 import {
    Breadcrumb,
    TeamResponse,
@@ -35,19 +36,22 @@ import {
    SingleUtils,
    TimelineAdd,
    DocumentDisplay,
+   Loader,
 } from "../components";
+import { toastErrorStyle } from "../utils/toastStyling";
+import moment from "moment";
 
 // ["name", "username", "userType", "avatar"]
 
-interface IUserPopulate {
+export interface IUserPopulate {
    _id: string;
    name: string;
    username: string;
-   userType: string;
+   userType: EUserTypes;
    avatar: string;
 }
 
-interface IPhotos {
+export interface IPhotos {
    uid: string | number;
    name: string;
    status: string | "done";
@@ -62,21 +66,55 @@ interface ISuggestions {
    comment?: string;
 }
 
-export interface IProject {
-   title: string;
+export interface IEventTypes {
+   _id: string;
+   createDate: Date;
    creator: IUserPopulate;
-   projectManager: IUserPopulate;
    desc: string;
-   photos: IPhotos[];
-   instructor: IUserPopulate;
-   joined?: IUserPopulate[];
+   endDate: Date;
+   eventNames: string;
+   startingDate: Date;
+   status: EEventStatus;
+   photo: string;
+}
+
+export interface IStatusTypes {
+   _id: string;
+   creator: IUserPopulate;
+   date: Date;
+   desc: string;
+   photos: string[];
    status: EStatus;
+}
+
+interface ITeamResponse {
+   bad: string[];
+   good: string[];
+   nothing: string[];
+   positive: string[];
+}
+
+export interface IProject {
    category: string;
-   love?: string[];
-   suggestion?: ISuggestions[];
+   createdAt: Date;
+   creator: IUserPopulate;
+   desc: string;
+   events: IEventTypes[];
+   instructor: IUserPopulate;
+   joined: IUserPopulate[];
+   love: string[];
+   photos: IPhotos[];
+   projectManager: IUserPopulate;
    projectType: ProjectType;
-   slug: string;
    readTime: number;
+   slug: string;
+   status: IStatusTypes[];
+   suggestion: ISuggestions[];
+   teamResponse: ITeamResponse;
+   title: string;
+   updatedAt: Date;
+   _id: string;
+   _v: number;
 }
 
 interface IProjectResponse {
@@ -88,19 +126,33 @@ const SingleProjectDisplay = () => {
    const [project, setProject] = useState<IProject | null>(null);
    const { slug } = useParams();
    const theme = useTheme();
+   const [loading, setLoading] = useState<boolean>(false);
 
    useEffect(() => {
       const fetchProject = async () => {
-         const { data } = await API.get<IProjectResponse>(
-            `/api/v1/projects/find-projects/${slug}`
-         );
+         try {
+            setLoading(true);
+            const { data } = await API.get<IProjectResponse>(
+               `/api/v1/projects/find-projects/${slug}`
+            );
+            setLoading(false);
 
-         if (data.success) {
-            setProject(data.project);
+            // console.log(data.project.status);
+
+            if (data.success) {
+               setProject(data.project);
+            }
+         } catch (err: any) {
+            setLoading(false);
+            const err_msg = err.response.data.message || err.message;
+            toast.error(err_msg, toastErrorStyle);
          }
       };
+
       fetchProject();
    }, [slug]);
+
+   if (loading) return <Loader />;
 
    return (
       <div>
@@ -138,11 +190,10 @@ const SingleProjectDisplay = () => {
                                  color="primary"
                                  fontFamily="Josefin Sans"
                               >
-                                 Lorem ipsum dolor sit amet consectetur
-                                 adipisicing elit. Porro, velit modi iure quidem
-                                 ipsa distinctio.
+                                 {project?.title}
                               </Typography>
-                              <TeamResponse />
+                              {/* HACK Team response chart */}
+                              <TeamResponse data={project?.teamResponse} />
                               <Typography level="h5" fontWeight="md">
                                  Team Response
                               </Typography>
@@ -159,7 +210,7 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    4.5K Love
+                                    {project?.love.length} Love(s)
                                  </Typography>
                                  <Typography
                                     fontSize="sm"
@@ -172,12 +223,13 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    5.3K Suggestions
+                                    {project?.suggestion.length} Suggestion(s)
                                  </Typography>
                                  <Chip
                                     size="sm"
                                     variant="outlined"
                                     color="primary"
+                                    sx={{ textTransform: "capitalize" }}
                                     startDecorator={
                                        <HourglassTopOutlined
                                           fontSize="small"
@@ -185,7 +237,11 @@ const SingleProjectDisplay = () => {
                                        />
                                     }
                                  >
-                                    Progressing
+                                    {
+                                       project?.status[
+                                          project.status.length - 1
+                                       ].status
+                                    }
                                  </Chip>
                               </Box>
                               <Box display="flex" gap={1} mt={2}>
@@ -200,24 +256,25 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    25 Jun 2022 03:40 PM
+                                    {moment(project?.createdAt).format("llll")}
                                  </Typography>
                                  <Typography
                                     fontSize="sm"
                                     startDecorator={
                                        <ManageHistory
                                           fontSize="small"
-                                          sx={{ color: "WindowFrame" }}
+                                          color="action"
                                        />
                                     }
                                     level="body2"
                                  >
-                                    25 Jun 2022 03:40 PM
+                                    {/* FIXME there is something went wrong. Is updatedAt current time?*/}
+                                    {moment(project?.updatedAt).format("llll")}
                                  </Typography>
 
                                  <Button
                                     size="sm"
-                                    variant="soft"
+                                    variant="plain"
                                     startDecorator={<Signpost />}
                                  >
                                     Details
@@ -250,7 +307,9 @@ const SingleProjectDisplay = () => {
                                  >
                                     Project Photos
                                  </Typography>
-                                 <ProductDetailsImageView />
+                                 <ProductDetailsImageView
+                                    photos={project?.photos}
+                                 />
                                  <Typography textAlign="center" level="body3">
                                     Click to view all images!
                                  </Typography>
@@ -271,7 +330,20 @@ const SingleProjectDisplay = () => {
                               justifyContent="space-between"
                               mb={2}
                            >
-                              <Typography fontWeight="lg" fontSize="lg">
+                              <Typography
+                                 fontWeight="xl2"
+                                 fontSize="md"
+                                 endDecorator={
+                                    <Typography
+                                       color="neutral"
+                                       fontSize="sm"
+                                       fontWeight="sm"
+                                       ml={1}
+                                    >
+                                       {project?.joined.length} Joined
+                                    </Typography>
+                                 }
+                              >
                                  JOINED MEMBERS
                               </Typography>
                               <Button
@@ -284,19 +356,12 @@ const SingleProjectDisplay = () => {
                            </Box>
                            <Divider />
 
-                           <MemberListItem />
-                           <Divider />
-                           <MemberListItem />
-                           <Divider />
-                           <MemberListItem />
-                           <Divider />
-                           <MemberListItem />
-                           <Divider />
-                           <MemberListItem />
-                           <Divider />
-                           <MemberListItem />
+                           {project?.joined.slice(0, 6).map((person, i) => (
+                              <Box key={person._id}>
+                                 <MemberListItem user={person} />
+                              </Box>
+                           ))}
 
-                           <Divider />
                            <Box
                               mt={2}
                               display="flex"
@@ -315,6 +380,8 @@ const SingleProjectDisplay = () => {
                            </Box>
                         </Paper>
                      </Grid>
+
+                     {/* HACK Events */}
                      <Grid item xs={12} sm={12} md={3}>
                         <Grid container spacing={2}>
                            <Grid
@@ -342,10 +409,9 @@ const SingleProjectDisplay = () => {
                                  Create One
                               </Button>
                            </Grid>
-
-                           <ComingEvents />
-
-                           <ComingEvents />
+                           {project?.events.slice(0, 2).map((event) => (
+                              <ComingEvents key={event._id} event={event} />
+                           ))}
                         </Grid>
                      </Grid>
                      <Grid item xs={12} sm={12} md={4}>
@@ -366,7 +432,7 @@ const SingleProjectDisplay = () => {
                               </Typography>
                            </Grid>
                            {/* HACK UTILS */}
-                           <SingleUtils />
+                           {project && <SingleUtils data={project} />}
                         </Grid>
                      </Grid>
                   </Grid>
@@ -388,7 +454,9 @@ const SingleProjectDisplay = () => {
                      </Typography>
                   </Box>
                   <Paper sx={{ p: 3 }}>
-                     <TimeLine />
+                     {project?.status && (
+                        <TimeLine timelines={project?.status} />
+                     )}
                   </Paper>
                </Grid>
 

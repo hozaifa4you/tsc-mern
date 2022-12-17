@@ -4,9 +4,14 @@ import { Box, List, ListItem, Typography } from "@mui/joy";
 import { Avatar, useTheme } from "@mui/material";
 import { Tag } from "antd";
 
-interface IPrpsTypes {}
+import { IUserPopulate } from "../../pages/SingleProjectDisplay";
+import { tagColorVerifyForList } from "../../utils/urls";
 
-const MemberListItem: FC<IPrpsTypes> = () => {
+interface IPropTypes {
+   user: IUserPopulate;
+}
+
+const MemberListItem: FC<IPropTypes> = ({ user }) => {
    const theme = useTheme();
 
    return (
@@ -21,7 +26,18 @@ const MemberListItem: FC<IPrpsTypes> = () => {
                      justifyContent="center"
                      gap={1}
                   >
-                     <Tag color="magenta">Manager</Tag>
+                     {/* FIXME project role is not setup */}
+                     <Tag
+                        color={tagColorVerifyForList(user.userType)}
+                        style={{
+                           textTransform:
+                              user.userType === "ceo"
+                                 ? "uppercase"
+                                 : "capitalize",
+                        }}
+                     >
+                        {user.userType}
+                     </Tag>
                      <MoreVert
                         fontSize="small"
                         sx={{
@@ -35,10 +51,15 @@ const MemberListItem: FC<IPrpsTypes> = () => {
                   <Avatar
                      variant="rounded"
                      sx={{ width: "50px", height: "50px" }}
+                     src={
+                        user.avatar === "avatar.png"
+                           ? "/avatar.png"
+                           : user.avatar
+                     }
                   />
                   <Box>
-                     <Typography fontWeight={"sm"} level="h6">
-                        Yousuf Ahmad
+                     <Typography fontWeight={"md"} fontSize="sm" level="h6">
+                        {user.name}
                      </Typography>
                      <div
                         style={{
@@ -48,24 +69,26 @@ const MemberListItem: FC<IPrpsTypes> = () => {
                         }}
                      >
                         <Typography
+                           sx={{
+                              color: theme.palette.grey[400],
+                           }}
+                           fontWeight="sm"
+                           fontSize="12px"
+                           textTransform="uppercase"
+                        >
+                           {user.userType}
+                        </Typography>
+                        <Typography
                            level="body2"
                            sx={{
                               color: theme.palette.grey[600],
                            }}
                            fontWeight="sm"
                            fontStyle="italic"
+                           fontSize="12px"
                         >
+                           {/* FIXME join date is not specified  in database schema */}
                            12 Dec 2022
-                        </Typography>
-                        <Typography
-                           sx={{
-                              color: theme.palette.grey[400],
-                           }}
-                           fontWeight="sm"
-                           fontSize="sm"
-                           textTransform="uppercase"
-                        >
-                           Team Leader
                         </Typography>
                      </div>
                   </Box>

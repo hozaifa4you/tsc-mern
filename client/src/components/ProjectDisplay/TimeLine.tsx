@@ -4,6 +4,14 @@ import { Tag, Timeline } from "antd";
 import { CheckCircle, Circle } from "@mui/icons-material";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Avatar, useTheme, styled, Paper } from "@mui/material";
+import moment from "moment";
+
+import { IStatusTypes } from "../../pages/SingleProjectDisplay";
+import { tagColorVerify } from "../../utils/urls";
+
+interface IPropTypes {
+   timelines: IStatusTypes[];
+}
 
 const CustomBox = styled(Box)(({ theme }) => ({
    "& img": {
@@ -15,14 +23,87 @@ const CustomBox = styled(Box)(({ theme }) => ({
    },
 }));
 
-const TimeLine = () => {
+const TimeLine: FC<IPropTypes> = ({ timelines }) => {
    const theme = useTheme();
+
+   console.log(timelines);
 
    return (
       <>
          <Box>
             <Timeline style={{ marginTop: 10 }}>
-               <Timeline.Item
+               {timelines.map((timeline) => (
+                  <Timeline.Item
+                     key={timeline._id}
+                     color="green"
+                     dot={
+                        <Avatar
+                           src={
+                              timeline.creator.avatar === "avatar.png"
+                                 ? "/avatar.png"
+                                 : timeline.creator.avatar
+                           }
+                           sx={{ width: "25px", height: "25px" }}
+                        />
+                     }
+                  >
+                     <Box>
+                        <Typography
+                           color="primary"
+                           fontSize="sm"
+                           fontWeight="xl2"
+                           component="span"
+                        >
+                           {timeline.creator.name}
+                        </Typography>
+                        <Box display="flex" alignItems="center" gap={1}>
+                           <Tag
+                              color={tagColorVerify(timeline.status)}
+                              style={{ margin: 0, textTransform: "capitalize" }}
+                           >
+                              {timeline.status}
+                           </Tag>
+                           <Typography
+                              fontWeight="sm"
+                              sx={{
+                                 color: "#A6A9B0",
+                              }}
+                           >
+                              Created
+                           </Typography>
+                           <Circle sx={{ fontSize: "5px" }} />
+                           <Typography
+                              fontWeight="sm"
+                              fontSize="sm"
+                              sx={{
+                                 color: "#A6A9B0",
+                              }}
+                              fontStyle="italic"
+                           >
+                              {moment(timeline.date).fromNow()}
+                           </Typography>
+                        </Box>
+                        <Typography
+                           fontSize="sm"
+                           fontWeight="sm"
+                           bgcolor="#f7f7f7"
+                           p={1}
+                           my={0.8}
+                           borderRadius={0.5}
+                        >
+                           {timeline.desc}
+                        </Typography>
+
+                        <CustomBox my={1}>
+                           {timeline.photos.map((photo, i) => (
+                              <img key={i} src={photo} alt={timeline.desc} />
+                           ))}
+                        </CustomBox>
+                     </Box>
+                  </Timeline.Item>
+               ))}
+
+               {/* <Timeline.Item
                   color="green"
                   dot={
                      <Avatar
@@ -85,8 +166,8 @@ const TimeLine = () => {
                         <img src="/sample.jpg" alt="project" />
                      </CustomBox>
                   </Box>
-               </Timeline.Item>
-               <Timeline.Item
+               </Timeline.Item> */}
+               {/* <Timeline.Item
                   color="green"
                   dot={
                      <Avatar
@@ -363,7 +444,7 @@ const TimeLine = () => {
                         <img src="/sample.jpg" alt="project" />
                      </CustomBox>
                   </Box>
-               </Timeline.Item>
+               </Timeline.Item> */}
             </Timeline>
          </Box>
       </>

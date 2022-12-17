@@ -50,7 +50,17 @@ class ProjectsControllers {
          .populate("projectManager", ["name", "username", "userType", "avatar"])
          .populate("instructor", ["name", "username", "userType", "avatar"])
          .populate("joined", ["name", "username", "userType", "avatar"])
-         .populate("suggestion", ["name", "username", "userType", "avatar"]);
+         .populate("suggestion", ["name", "username", "userType", "avatar"])
+         .populate("creator", ["name", "username", "userType", "avatar"])
+         .populate("status.creator", ["name", "username", "userType", "avatar"])
+         .populate("suggestion.user", [
+            "name",
+            "username",
+            "userType",
+            "avatar",
+         ])
+         .populate("events.creator", ["name", "username", "userType", "avatar"])
+         .select("-password");
 
       if (!project) {
          res.status(404);
