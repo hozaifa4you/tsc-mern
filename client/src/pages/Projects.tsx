@@ -51,6 +51,8 @@ const Projects = () => {
    const { projects, status } = useAppSelector(selectProjects);
    const { isAuth, token } = useAppSelector(selectLogin);
 
+   console.log(projects);
+
    useEffect(() => {
       console.log("useEffect checked -> Home");
 
