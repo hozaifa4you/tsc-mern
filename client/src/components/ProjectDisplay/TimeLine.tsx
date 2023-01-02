@@ -1,12 +1,11 @@
 import { FC } from "react";
 import { Box, Typography } from "@mui/joy";
 import { Tag, Timeline } from "antd";
-import { CheckCircle, Circle } from "@mui/icons-material";
-import { Scrollbars } from "react-custom-scrollbars";
-import { Avatar, useTheme, styled, Paper } from "@mui/material";
+import { Circle } from "@mui/icons-material";
+import { Avatar, styled } from "@mui/material";
 import moment from "moment";
 
-import { IStatusTypes } from "../../pages/SingleProjectDisplay";
+import { IStatusTypes } from "../../utils/types";
 import { tagColorVerify } from "../../utils/urls";
 
 interface IPropTypes {
@@ -24,8 +23,6 @@ const CustomBox = styled(Box)(({ theme }) => ({
 }));
 
 const TimeLine: FC<IPropTypes> = ({ timelines }) => {
-   const theme = useTheme();
-
    console.log(timelines);
 
    return (

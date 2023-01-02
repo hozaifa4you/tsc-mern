@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Space } from "antd";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";

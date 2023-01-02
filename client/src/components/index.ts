@@ -28,6 +28,7 @@ export { default as SingleUtils } from "./ProjectDisplay/SingleUtils";
 export { default as TimelineAdd } from "./ProjectDisplay/TimelineAdd";
 export { default as TimelineImageUpload } from "./ProjectDisplay/TimelineImageUpload";
 export { default as DocumentDisplay } from "./ProjectDisplay/DocumentDisplay";
+export { default as Suggestion } from "./ProjectDisplay/Suggestion";
 
 export { default as Guest } from "./Authentication/Guest";
 export { default as Protect } from "./Authentication/Protect";

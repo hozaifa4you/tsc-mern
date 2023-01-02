@@ -2,25 +2,23 @@ import { useEffect, useState } from "react";
 import { Button, Chip, Container, Typography } from "@mui/joy";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Avatar, Box, Divider, Grid, Paper, useTheme } from "@mui/material";
+import { Box, Divider, Grid, Paper, useTheme } from "@mui/material";
 import {
    AccessTime,
    AddTask,
    ArrowRightAlt,
    Celebration,
    FavoriteBorder,
-   FiberManualRecord,
    History,
    HourglassTopOutlined,
    Loupe,
    ManageHistory,
    MarkChatRead,
-   PostAdd,
    Settings,
    Signpost,
 } from "@mui/icons-material";
-import { Input } from "antd";
 import { toast } from "react-hot-toast";
+import moment from "moment";
 
 import { API } from "../app/API";
 import { EEventStatus, EStatus, EUserTypes, ProjectType } from "../utils/urls";
@@ -35,11 +33,9 @@ import {
    SingleUtils,
    TeamResponse,
    TimeLine,
+   Suggestion,
 } from "../components";
 import { toastErrorStyle } from "../utils/toastStyling";
-import moment from "moment";
-
-// ["name", "username", "userType", "avatar"]
 
 export interface IUserPopulate {
    _id: string;
@@ -100,14 +96,14 @@ export interface IProject {
    events: IEventTypes[];
    instructor: IUserPopulate;
    joined: IUserPopulate[];
-   love: string[];
+   love?: string[];
    photos: IPhotos[];
    projectManager: IUserPopulate;
    projectType: ProjectType;
    readTime: number;
    slug: string;
    status: IStatusTypes[];
-   suggestion: ISuggestions[];
+   suggestion?: ISuggestions[];
    teamResponse: ITeamResponse;
    title: string;
    updatedAt: Date;
@@ -210,7 +206,7 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    {project?.love.length} Love(s)
+                                    {project?.love?.length} Love(s)
                                  </Typography>
                                  <Typography
                                     fontSize="sm"
@@ -223,7 +219,7 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    {project?.suggestion.length} Suggestion(s)
+                                    {project?.suggestion?.length} Suggestion(s)
                                  </Typography>
                                  <Chip
                                     size="sm"
@@ -268,7 +264,7 @@ const SingleProjectDisplay = () => {
                                     }
                                     level="body2"
                                  >
-                                    {/* FIXME there is something went wrong. Is updatedAt current time?*/}
+                                    {/* FIXME there is something went wrong. Is updatedAt current time? */}
                                     {moment(project?.updatedAt).format("llll")}
                                  </Typography>
 
@@ -520,65 +516,8 @@ const SingleProjectDisplay = () => {
                   </Paper>
                </Grid>
 
-               <Grid item xs={12} sm={12}>
-                  <Paper>
-                     <Box p={2} display="flex" flexDirection="column">
-                        <Box display="flex" gap={1}>
-                           <Avatar
-                              sx={{ width: "45px", height: "45px" }}
-                              variant="circular"
-                           />
-                           <Input.TextArea
-                              style={{ width: "100%", height: "130px" }}
-                              placeholder="What is your suggestions about the project?"
-                           />
-                        </Box>
-                        <Button
-                           sx={{ marginLeft: "auto", mt: 1.5 }}
-                           variant="soft"
-                           size="sm"
-                           startDecorator={<PostAdd />}
-                        >
-                           Post a suggestion
-                        </Button>
-                     </Box>
-                     <Divider />
-                     <Box p={3} display="flex" gap={2}>
-                        <Avatar
-                           sx={{ width: "45px", height: "45px" }}
-                           variant="rounded"
-                        />
-                        <Box>
-                           <Box display="flex" gap={1} alignItems="center">
-                              <Typography
-                                 level="body2"
-                                 fontWeight="lg"
-                                 component="span"
-                                 sx={{ color: "#000" }}
-                              >
-                                 Yousuf Ahamad
-                              </Typography>{" "}
-                              <FiberManualRecord sx={{ fontSize: "7px" }} />
-                              <Typography
-                                 level="body2"
-                                 fontWeight="sm"
-                                 component="span"
-                              >
-                                 One month ago
-                              </Typography>
-                           </Box>
-                           <Typography
-                              level="body1"
-                              fontWeight="sm"
-                              color="neutral"
-                           >
-                              Lorem ipsum dolor sit amet consectetur adipisicing
-                              elit. Recusandae vel culpa earum?
-                           </Typography>
-                        </Box>
-                     </Box>
-                  </Paper>
-               </Grid>
+               {/* HACK suggestion */}
+               <Suggestion suggestions={project?.suggestion} />
             </Grid>
          </Container>
       </div>
