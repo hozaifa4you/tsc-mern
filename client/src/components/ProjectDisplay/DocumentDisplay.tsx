@@ -1,23 +1,35 @@
 import React, { useState } from "react";
-import { Button, Image, Space } from "antd";
+import { Space } from "antd";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
-const DocumentDisplay: React.FC = () => {
-   const [random, setRandom] = useState<number>();
+interface IPropTypes {
+   images: string[];
+}
+
+const DocumentDisplay: React.FC<IPropTypes> = ({ images }) => {
+   console.log(images);
 
    return (
       <Space size={12}>
-         <Image.PreviewGroup>
-            <Image
-               width={80}
-               src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-               loading="lazy"
-            />
-            <Image
-               width={80}
-               src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-               loading="lazy"
-            />
-         </Image.PreviewGroup>
+         <PhotoProvider>
+            {images.map((x, i) => (
+               <PhotoView key={i} src={x}>
+                  <img
+                     style={{
+                        cursor: "pointer",
+                        padding: "5px",
+                        borderRadius: "5px",
+                        border: "1px solid #BDBDBD",
+                        margin: "5px",
+                     }}
+                     width={110}
+                     src={x}
+                     alt="photos"
+                  />
+               </PhotoView>
+            ))}
+         </PhotoProvider>
       </Space>
    );
 };

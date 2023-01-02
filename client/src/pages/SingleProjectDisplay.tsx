@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Chip, Container, Typography } from "@mui/joy";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -15,7 +15,6 @@ import {
    Loupe,
    ManageHistory,
    MarkChatRead,
-   MoreTime,
    PostAdd,
    Settings,
    Signpost,
@@ -24,19 +23,18 @@ import { Input } from "antd";
 import { toast } from "react-hot-toast";
 
 import { API } from "../app/API";
-import { EStatus, ProjectType, EUserTypes, EEventStatus } from "../utils/urls";
+import { EEventStatus, EStatus, EUserTypes, ProjectType } from "../utils/urls";
 import {
-   Breadcrumb,
-   TeamResponse,
-   ProductDetailsImageView,
-   MemberListItem,
-   TimeLine,
-   ComingEvents,
    ActivitySingle,
-   SingleUtils,
-   TimelineAdd,
+   Breadcrumb,
+   ComingEvents,
    DocumentDisplay,
    Loader,
+   MemberListItem,
+   ProductDetailsImageView,
+   SingleUtils,
+   TeamResponse,
+   TimeLine,
 } from "../components";
 import { toastErrorStyle } from "../utils/toastStyling";
 import moment from "moment";
@@ -127,6 +125,8 @@ const SingleProjectDisplay = () => {
    const { slug } = useParams();
    const theme = useTheme();
    const [loading, setLoading] = useState<boolean>(false);
+
+   console.log(project);
 
    useEffect(() => {
       const fetchProject = async () => {
@@ -462,23 +462,10 @@ const SingleProjectDisplay = () => {
 
                {/* HACK Activity */}
                <Grid item xs={12} sm={12} md={5}>
-                  <Box
-                     display="flex"
-                     alignItems="center"
-                     justifyContent="space-between"
-                     mb={1}
-                  >
-                     <Typography
-                        level="h6"
-                        startDecorator={<MoreTime fontSize="small" />}
-                     >
-                        Add New Timeline
-                     </Typography>
-                  </Box>
                   <Box>
-                     <Grid container spacing={2}>
+                     <Grid container>
                         {/* input here */}
-                        <TimelineAdd />
+                        {/*<TimelineAdd />*/}
                         {/* input */}
                         <Grid item xs={12} sm={12} md={12}>
                            <Box
@@ -514,11 +501,22 @@ const SingleProjectDisplay = () => {
 
                <Grid item xs={12} sm={12}>
                   <Paper sx={{ p: 2 }}>
-                     <Typography level="h6" mb={2}>
+                     <Typography
+                        level="body1"
+                        mb={2}
+                        fontSize="sm2"
+                        fontWeight="xl2"
+                        letterSpacing="1px"
+                        textTransform="uppercase"
+                     >
                         All Documents
                      </Typography>
-
-                     <DocumentDisplay />
+                     {/* HACK All documents */}
+                     {project?.photos.length && (
+                        <DocumentDisplay
+                           images={project?.photos.map((x) => x.url)}
+                        />
+                     )}
                   </Paper>
                </Grid>
 
