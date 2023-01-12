@@ -65,7 +65,7 @@ const Suggestion: FC<IPropTypes> = ({ suggestions }) => {
                            sx={{ color: "#000" }}
                         >
                            {suggestion?.user?.name}
-                        </Typography>{" "}
+                        </Typography>
                         <FiberManualRecord sx={{ fontSize: "7px" }} />
                         <Typography
                            level="body2"

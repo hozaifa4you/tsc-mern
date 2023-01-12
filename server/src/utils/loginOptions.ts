@@ -2,12 +2,13 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import { EUsers } from "../models/User";
+import { Schema } from "mongoose";
 
 const jwt_secret: string = process.env.JWT_SECRET!;
 const jwt_expiry: string = process.env.JWT_EXPIRY!;
 
 export interface IJwtPayload extends JwtPayload {
-   id: string;
+   id: string | Schema.Types.ObjectId;
    username: string;
    email: string;
    userType: EUsers;

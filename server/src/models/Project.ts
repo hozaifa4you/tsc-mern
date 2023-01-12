@@ -30,8 +30,15 @@ interface IProjectStatus {
    photos: string[];
 }
 
-interface ISuggestions {
-   user: Schema.Types.ObjectId;
+interface ISuggestionUser {
+   username: string;
+   name: string;
+   _id: Schema.Types.ObjectId | string;
+   avatar: string;
+}
+
+export interface ISuggestions {
+   user: Schema.Types.ObjectId | ISuggestionUser | any;
    date: Date;
    comment: string;
 }

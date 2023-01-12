@@ -8230,10 +8230,10 @@ react-scripts@5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-slugify@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-slugify/-/react-slugify-2.1.0.tgz#01d93b80381dcd47fe6e074eb137a475579967a7"
-  integrity sha512-X+kYdGP1WumAX2exool+1lwjLSZ1dDCaCzwF0KvDWHjPfCD4hxtHvok4oyZEZro2lioaR+lCtyVG8ti2Yvpnsg==
+react-slugify@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-slugify/-/react-slugify-3.0.0.tgz#8d2390ba7a728aacbe5f97d12d786fb5065218b0"
+  integrity sha512-vSHlLXtNUwcaXSXV0rhb68U2DupVDDO6N4GhfKK3MjdrVwjBDY/QANyLIDyFdvEX83L5x2EampZ50POnChaESw==
 
 react-transition-group@^4.4.5:
   version "4.4.5"

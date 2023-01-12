@@ -97,3 +97,15 @@ router
    .post(asyncHandler(projectsCtrls.deletePhotos));
 
 export default router;
+
+/**
+ * @desc add a suggestion
+ * @method POST
+ * @route /api/v1/projects/suggestions/add/:project_id
+ */
+router
+   .route("/suggestions/add/:project_id")
+   .post(
+      asyncHandler(authentication),
+      asyncHandler(projectsCtrls.addSuggestions)
+   );
