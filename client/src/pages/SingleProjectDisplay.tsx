@@ -21,7 +21,13 @@ import { toast } from "react-hot-toast";
 import moment from "moment";
 
 import { API } from "../app/API";
-import { EEventStatus, EStatus, EUserTypes, ProjectType } from "../utils/urls";
+import {
+   EEventStatus,
+   EStatus,
+   EUserTypes,
+   ITeamResponse,
+   ProjectType,
+} from "../utils/urls";
 import {
    ActivitySingle,
    Breadcrumb,
@@ -81,13 +87,6 @@ export interface IStatusTypes {
    status: EStatus;
 }
 
-interface ITeamResponse {
-   bad: string[];
-   good: string[];
-   nothing: string[];
-   positive: string[];
-}
-
 export interface IProject {
    category: string;
    createdAt: Date;
@@ -132,8 +131,6 @@ const SingleProjectDisplay = () => {
                `/api/v1/projects/find-projects/${slug}`
             );
             setLoading(false);
-
-            // console.log(data.project.status);
 
             if (data.success) {
                setProject(data.project);
@@ -517,7 +514,12 @@ const SingleProjectDisplay = () => {
                </Grid>
 
                {/* HACK suggestion */}
-               <Suggestion suggestions={project?.suggestion} />
+               {project && (
+                  <Suggestion
+                     suggestions={project?.suggestion}
+                     projectId={project?._id}
+                  />
+               )}
             </Grid>
          </Container>
       </div>
